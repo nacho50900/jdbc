@@ -71,7 +71,7 @@ public class DeleteMechanic implements Command<MechanicDto> {
 		    }
 	
 		} catch (SQLException e) {
-		    throw new RuntimeException(e);
+		    //throw new RuntimeException(e);
 		}
 	}
 	
