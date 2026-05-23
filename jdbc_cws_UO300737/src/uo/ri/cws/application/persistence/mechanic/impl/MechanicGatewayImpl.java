@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
-import uo.ri.cws.application.persistence.mechanic.MechanicAssembler;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.mechanic.MechanicRecord;
-import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -33,14 +31,14 @@ public class MechanicGatewayImpl implements MechanicGateway {
             pst.setString(3, t.name);
             pst.setString(4, t.surname);
             pst.setLong(5, t.version);
-            pst.setTimestamp(6, java.sql.Timestamp.valueOf(t.createdAt));
-            pst.setTimestamp(7, java.sql.Timestamp.valueOf(t.updateAt));
-            pst.setString(8, t.entityState);
+            pst.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+            pst.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
+            pst.setString(8, "ACTIVE");
 
             pst.executeUpdate();
         
 	    } catch (SQLException e) {
-	        throw new RuntimeException("Error inserting mechanic: " + t.nif, e);
+	        throw new PersistenceException("Error inserting mechanic: " + t.nif, e);
 	    }
 	}
 
@@ -53,10 +51,9 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		Queries.getSQLSentence("TMECHANICS_DELETE"))) {
 			pst.setString(1, id);
 			pst.executeUpdate();
-	    
 	
 		} catch (SQLException e) {
-		    throw new RuntimeException(e);
+		    throw new PersistenceException(e);
 		}
     }
     
@@ -98,6 +95,11 @@ public class MechanicGatewayImpl implements MechanicGateway {
     }
     
     @Override
+    public Optional<MechanicRecord> findByNif(String nif) {
+    	return findBy(nif, Queries.getSQLSentence("TMECHANICS_FIND_BY_NIF"));
+    }
+    
+    @Override
     public List<MechanicRecord> findAll() throws PersistenceException {
     	
 		List<MechanicRecord> mechanicsList = new ArrayList<MechanicRecord>();
@@ -107,14 +109,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		Queries.getSQLSentence("TMECHANICS_FINDALL"))) {
 			try (ResultSet rs = pst.executeQuery()) {
 				while (rs.next()) {
-				    MechanicDto dto = new MechanicDto();
-				    //get(NAME) Safer and robust than indexes
-				    dto.nif = rs.getString("NIF");
-				    dto.name = rs.getString("NAME");
-				    dto.surname = rs.getString("SURNAME");
-				    dto.id = rs.getString("ID");
-				    dto.version = rs.getLong("VERSION");
-				    mechanicsList.add(MechanicAssembler.toRecord(dto));
+				    mechanicsList.add(toRecord(rs));
 				}
 		    }
 		} catch (SQLException e) {
@@ -123,40 +118,22 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		return mechanicsList;
     }
 
-    @Override
-    public Optional<MechanicRecord> findByNif(String nif) {
-    	return findBy(nif, Queries.getSQLSentence("TMECHANICS_FINDBYNIF"));
-    }
-
+    //GENERIC APPROCUH TO FIND BY ID OR NIF
     public Optional<MechanicRecord> findBy(String IdOrNif,
 	String selectedAssignText) {
     	
-		// Process
-		MechanicDto dto = new MechanicDto();
-		Connection c = Jdbc.getCurrentConnection();
-		try {
-	        if (c == null || c.isClosed()) { 
-	            c = Jdbc.createThreadConnection(); 
-	        } //Need it because Crud Service use it first
-		    try (PreparedStatement pst = c.prepareStatement(
-				selectedAssignText)) {
-				pst.setString(1, IdOrNif);
-				try (ResultSet rs = pst.executeQuery()) {
-					if (rs.next()) {
-					    dto.nif = rs.getString("NIF");
-					    dto.name = rs.getString("NAME");
-					    dto.surname = rs.getString("SURNAME");
-					    dto.id = rs.getString("ID");
-					    dto.version = rs.getLong("VERSION");
-					} else {
-					    return Optional.empty();
-					}
-				}
-		    }
-		} catch (SQLException e) {
-		    throw new RuntimeException(e);
-		}
-		return Optional.of(MechanicAssembler.toRecord(dto));
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(selectedAssignText)) {
+            pst.setString(1, IdOrNif);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (!rs.next()) {
+                    return Optional.empty();
+                }
+                return Optional.of(toRecord(rs));
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
     }
 
 	@Override
@@ -169,13 +146,7 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		Queries.getSQLSentence("TMECHANICS_FINDMECHANICSWITHVALIDCONTRACT"))) {
 			try (ResultSet rs = pst.executeQuery()) {
 				while (rs.next()) {
-				    MechanicDto dto = new MechanicDto();
-				    dto.nif = rs.getString("NIF");
-				    dto.name = rs.getString("NAME");
-				    dto.surname = rs.getString("SURNAME");
-				    dto.id = rs.getString("ID");
-				    dto.version = rs.getLong("VERSION");
-				    mechanicsList.add(MechanicAssembler.toRecord(dto));
+				    mechanicsList.add(toRecord(rs));
 				}
 			}
 		} catch (SQLException e) {
@@ -183,4 +154,44 @@ public class MechanicGatewayImpl implements MechanicGateway {
 		}
 		return mechanicsList;
 	}
+	
+    public boolean hasWorkOrders(String mechanicId) throws PersistenceException {
+        return countBy("TMECHANICS_HAS_WORKORDERS", mechanicId) > 0;
+    }
+ 
+    public boolean hasInterventions(String mechanicId) throws PersistenceException {
+        return countBy("TMECHANICS_HAS_INTERVENTIONS", mechanicId) > 0;
+    }
+ 
+    public boolean hasContracts(String mechanicId) throws PersistenceException {
+        return countBy("TMECHANICS_HAS_CONTRACT", mechanicId) > 0;
+    }
+ 
+    // Helpers
+    private long countBy(String queryKey, String id) throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence(queryKey))) {
+ 
+            pst.setString(1, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1);
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+        return 0L;
+    }
+    
+    private MechanicRecord toRecord(ResultSet rs) throws SQLException {
+        MechanicRecord r = new MechanicRecord();
+        r.id      = rs.getString("ID");
+        r.nif     = rs.getString("NIF");
+        r.name    = rs.getString("NAME");
+        r.surname = rs.getString("SURNAME");
+        r.version = rs.getLong("VERSION");
+        return r;
+    }
 }

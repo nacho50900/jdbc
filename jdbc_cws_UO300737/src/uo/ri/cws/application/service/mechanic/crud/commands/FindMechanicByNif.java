@@ -1,9 +1,9 @@
 package uo.ri.cws.application.service.mechanic.crud.commands;
 
 
-public class ListMechanicByNif extends ListMechanic {
+public class FindMechanicByNif extends FindMechanic {
     
-    public ListMechanicByNif(String mechanicNif) {
+    public FindMechanicByNif(String mechanicNif) {
     	super("NIF", mechanicNif);
     }
 }

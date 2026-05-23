@@ -3,7 +3,6 @@ package uo.ri.cws.application.service.mechanic;
 import java.util.List;
 import java.util.Optional;
 
-import uo.ri.cws.application.persistence.mechanic.Mechanic;
 import uo.ri.util.exception.BusinessException;
 
 /**
@@ -86,11 +85,13 @@ public interface MechanicCrudService {
      */
     List<MechanicDto> findMechanicsWithValidContract() throws BusinessException;
 
-    public class MechanicDto extends Mechanic {
-
-	public MechanicDto() {
-	    super();
-	}
+    public class MechanicDto {
+        public String id;
+        public long version;
+ 
+        public String nif;
+        public String name;
+        public String surname;
     }
 
 }

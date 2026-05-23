@@ -10,10 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupAssembler;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupRecord;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -37,7 +35,7 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 
             pst.executeUpdate();
 	    } catch (SQLException e) {
-	        throw new RuntimeException("Error inserting Professional Group: " 
+	        throw new PersistenceException("Error inserting Professional Group: " 
 	        		+ t.name, e);
 	    }
 	}
@@ -52,7 +50,7 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 			pst.setString(1, id);
 			pst.executeUpdate();
 		} catch (SQLException e) {
-		    throw new RuntimeException(e);
+		    throw new PersistenceException(e);
 		}
 	}
 
@@ -85,82 +83,88 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
 	}
 
 	@Override
-	public Optional<ProfessionalGroupRecord> findById(String id)
-			throws PersistenceException {
-
-		ProfessionalGroupDto dto = new ProfessionalGroupDto();
-		Connection c = Jdbc.getCurrentConnection();
-
-	    try (PreparedStatement pst = c.prepareStatement(
-	    		Queries.getSQLSentence("TPROFESSIONALGROUPS_FIND_BY_ID"))) {
-			pst.setString(1, id);
-			try (ResultSet rs = pst.executeQuery()) {
-				if (rs.next()) {
-				    dto.id = rs.getString("ID");
-				    dto.name = rs.getString("NAME");
-				    dto.trienniumPayment = rs.getDouble("TRIENNIUMPAYMENT");
-				    dto.productivityRate = rs.getDouble("PRODUCTIVITYRATE");
-				    dto.version = rs.getLong("VERSION");
-				} else {
-				    return Optional.empty();
-				}
-			}
-		} catch (SQLException e) {
-		    throw new RuntimeException(e);
-		}
-		return Optional.of(ProfessionalGroupAssembler.toRecord(dto));
-	}
-	
+    public Optional<ProfessionalGroupRecord> findById(String id)
+            throws PersistenceException {
+ 
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TPROFESSIONALGROUPS_FIND_BY_ID"))) {
+ 
+            pst.setString(1, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (!rs.next()) {
+                    return Optional.empty();
+                }
+                return Optional.of(toRecord(rs));
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
+ 
     @Override
-	public Optional<ProfessionalGroupRecord> findByName(String name) {
+    public Optional<ProfessionalGroupRecord> findByName(String name)
+            throws PersistenceException {
+ 
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TPROFESSIONALGROUPS_FIND_BY_NAME"))) {
+ 
+            pst.setString(1, name);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (!rs.next()) {
+                    return Optional.empty();
+                }
+                return Optional.of(toRecord(rs));
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }	
 
-		ProfessionalGroupDto dto = new ProfessionalGroupDto();
-		Connection c = Jdbc.getCurrentConnection();
-
-	    try (PreparedStatement pst = c.prepareStatement(
-	    		Queries.getSQLSentence("TPROFESSIONALGROUPS_FIND_BY_NAME"))) {
-			pst.setString(1, name);
-			try (ResultSet rs = pst.executeQuery()) {
-				if (rs.next()) {
-				    dto.id = rs.getString("ID");
-				    dto.name = rs.getString("NAME");
-				    dto.trienniumPayment = rs.getDouble("TRIENNIUMPAYMENT");
-				    dto.productivityRate = rs.getDouble("PRODUCTIVITYRATE");
-				    dto.version = rs.getLong("VERSION");
-				} else {
-				    return Optional.empty();
-				}
-			}
-		} catch (SQLException e) {
-		    throw new RuntimeException(e);
-		}
-		return Optional.of(ProfessionalGroupAssembler.toRecord(dto));
-	}	
-
-	@Override
-	public List<ProfessionalGroupRecord> findAll() throws PersistenceException {
-		List<ProfessionalGroupRecord> professionalGroupList = 
-				new ArrayList<ProfessionalGroupRecord>();
-		Connection c = Jdbc.getCurrentConnection();
-
-	    try (PreparedStatement pst = c.prepareStatement(
-		Queries.getSQLSentence("TPROFESSIONALGROUPS_FINDALL"))) {
-			try (ResultSet rs = pst.executeQuery()) {
-				while (rs.next()) {
-					ProfessionalGroupDto dto = new ProfessionalGroupDto();
-				    dto.id = rs.getString("ID"); //Safer and robust than indexes
-				    dto.name = rs.getString("NAME");
-				    dto.trienniumPayment = rs.getDouble("TRIENNIUMPAYMENT");
-				    dto.productivityRate = rs.getDouble("PRODUCTIVITYRATE");
-				    dto.version = rs.getLong("VERSION");
-				    professionalGroupList.add(
-				    		ProfessionalGroupAssembler.toRecord(dto));
-				}
-			}
-		} catch (SQLException e) {
-		    throw new RuntimeException(e);
-		}
-		return professionalGroupList;
-	}
+    @Override
+    public List<ProfessionalGroupRecord> findAll() throws PersistenceException {
+        List<ProfessionalGroupRecord> result = new ArrayList<>();
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TPROFESSIONALGROUPS_FINDALL"));
+             ResultSet rs = pst.executeQuery()) {
+ 
+            while (rs.next()) {
+                result.add(toRecord(rs));
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+        return result;
+    }
+    
+    public boolean hasContracts(String groupId) throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TCONTRACTS_COUNT_BY_PROFESSIONALGROUP_ID"))) {
+ 
+            pst.setString(1, groupId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getLong(1) > 0;
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+        return false;
+    }
+ 
+    // HELPER
+    private ProfessionalGroupRecord toRecord(ResultSet rs) throws SQLException {
+        ProfessionalGroupRecord r = new ProfessionalGroupRecord(
+                rs.getString("NAME"),
+                rs.getDouble("TRIENNIUMPAYMENT"),
+                rs.getDouble("PRODUCTIVITYRATE"));
+        r.id      = rs.getString("ID");
+        r.version = rs.getLong("VERSION");
+        return r;
+    }
 
 }

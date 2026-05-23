@@ -1,4 +1,4 @@
-package uo.ri.cws.application.service.invoice.create.commands;
+package uo.ri.cws.application.service.invoice.crud.commands;
 
 import java.util.List;
 
@@ -10,12 +10,12 @@ import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.console.Console;
 import uo.ri.util.exception.BusinessException;
 
-public class FindNotInvoiceWorkOrdersByClientNif implements Command<List<InvoicingWorkOrderDto>>{
+public class FindNotInvoicedWorkOrdersByClientNif implements Command<List<InvoicingWorkOrderDto>>{
  
     private String nif;
     private InvoiceGateway ig = Factories.persistence.forInvoice();
     
-    public FindNotInvoiceWorkOrdersByClientNif(String nif) {
+    public FindNotInvoicedWorkOrdersByClientNif(String nif) {
     	ArgumentChecks.isNotNull(nif, "NIF cannot be null");
     	//ArgumentChecks.isNotBlank(nif, "NIF cannot be blank");
     	//Test demand an empty list

@@ -7,7 +7,7 @@ import uo.ri.cws.application.service.contract.crud.ContractCrudServiceImpl;
 import uo.ri.cws.application.service.contracttype.ContractTypeCrudService;
 import uo.ri.cws.application.service.contracttype.crud.ContractTypeCrudServiceImpl;
 import uo.ri.cws.application.service.invoice.InvoicingService;
-import uo.ri.cws.application.service.invoice.create.InvoicingServiceImpl;
+import uo.ri.cws.application.service.invoice.crud.InvoicingServiceImpl;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService;
 import uo.ri.cws.application.service.mechanic.crud.MechanicCrudServiceImpl;
 import uo.ri.cws.application.service.payroll.PayrollService;

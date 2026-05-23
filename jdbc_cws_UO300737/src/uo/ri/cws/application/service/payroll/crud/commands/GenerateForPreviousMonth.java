@@ -15,23 +15,14 @@ import uo.ri.util.exception.BusinessException;
 public class GenerateForPreviousMonth implements Command<List<PayrollDto>> {
 
     private PayrollGateway pg = Factories.persistence.forPayroll();
-    
-	@Override
-	public List<PayrollDto> execute() throws BusinessException {
-		
-		if (pg.alreadyGeneratedForPrevMonthof(LocalDate.now())) {
-			return new ArrayList<PayrollDto>();
-		}
-		List<PayrollRecord> list = pg.generateForPrevMonth();
-		for (PayrollRecord record : list) {
-		    if (record.id == null || record.id.isBlank()) {
-		    	record.id = java.util.UUID.randomUUID().toString();
-		    }
-		    if (record.version == 0) {
-		    	record.version = 1L;
-		    }
-		}
-		return PayrollAssembler.toDtoList(list);
-	}
+
+    @Override
+    public List<PayrollDto> execute() throws BusinessException {
+        if (pg.alreadyGeneratedForPrevMonthof(LocalDate.now())) {
+            return new ArrayList<>();
+        }
+        List<PayrollRecord> list = pg.generateForPrevMonth();
+        return PayrollAssembler.toDtoList(list);
+    }
 
 }

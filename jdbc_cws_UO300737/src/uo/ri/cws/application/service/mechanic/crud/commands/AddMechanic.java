@@ -3,20 +3,17 @@ package uo.ri.cws.application.service.mechanic.crud.commands;
 import java.util.Optional;
 
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.persistence.mechanic.MechanicAssembler;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.mechanic.MechanicRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
+import uo.ri.cws.application.service.mechanic.crud.MechanicAssembler;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
 import uo.ri.util.exception.BusinessException;
 
 public class AddMechanic
     implements Command<MechanicDto> {
-
-    // private static final String SQL_INSERT = "INSERT INTO TMECHANICS (ID,
-    // NIF, NAME, SURNAME, VERSION) VALUES (?, ?, ?, ?, ?)";
 
     private MechanicDto dto;
     private MechanicGateway mg = Factories.persistence.forMechanic();
@@ -32,9 +29,7 @@ public class AddMechanic
     @Override
     public MechanicDto execute() throws BusinessException {
 	Optional<MechanicRecord> om = mg.findByNif(dto.nif);
-	BusinessChecks.doesNotExist(om, "The mechanic does not exist"); // Repeated
-									// Nif
-	//	BusinessChecks.hasVersion(dto.version, om.get().version);
+	BusinessChecks.doesNotExist(om, "The mechanic already exists"); 
 
 	// Rellena los campos generados en la capa de aplicación
     if (dto.id == null || dto.id.isBlank()) {

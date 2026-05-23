@@ -17,29 +17,19 @@ public class GenerateForPreviousMonthOf implements Command<List<PayrollDto>> {
 
     private PayrollGateway pg = Factories.persistence.forPayroll();
     private LocalDate present;
-    
+
     public GenerateForPreviousMonthOf(LocalDate present) {
-    	ArgumentChecks.isNotNull(present, "present can not be null");
-    	this.present = present;
+        ArgumentChecks.isNotNull(present, "present cannot be null");
+        this.present = present;
     }
-    
-	@Override
-	public List<PayrollDto> execute() throws BusinessException {
-		if (pg.alreadyGeneratedForPrevMonthof(present)) {
-			return new ArrayList<PayrollDto>();
-		}
-		List<PayrollRecord> payrolls = pg.generateForPrevMonthof(present);
-	
-		for (PayrollRecord record : payrolls) {
-		    if (record.id == null || record.id.isBlank()) {
-		    	record.id = java.util.UUID.randomUUID().toString();
-		    }
-		    if (record.version == 0) {
-		    	record.version = 1L;
-		    }
-		}
-		System.out.println("Nóminas generadas: " + payrolls.size());
-		
-		return PayrollAssembler.toDtoList(payrolls);
-	}
+
+    @Override
+    public List<PayrollDto> execute() throws BusinessException {
+        if (pg.alreadyGeneratedForPrevMonthof(present)) {
+            return new ArrayList<>();
+        }
+        List<PayrollRecord> payrolls = pg.generateForPrevMonthof(present);
+        return PayrollAssembler.toDtoList(payrolls);
+    }
+
 }

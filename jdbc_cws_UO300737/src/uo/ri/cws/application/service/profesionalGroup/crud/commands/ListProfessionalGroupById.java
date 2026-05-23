@@ -11,8 +11,7 @@ import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudServi
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessException;
 
-public class ListProfessionalGroupById 
-	implements Command<ProfessionalGroupDto> {
+public class ListProfessionalGroupById implements Command<Optional<ProfessionalGroupDto>> {
 
 	private String id;
     private ProfessionalGroupGateway mp = 
@@ -25,15 +24,12 @@ public class ListProfessionalGroupById
     }
 
 	@Override
-	public ProfessionalGroupDto execute() throws BusinessException {
+	public Optional<ProfessionalGroupDto> execute() throws BusinessException {
 		Optional<ProfessionalGroupRecord> op = mp.findById(id);
-		//No need of BussinesChecks.doesNotExist();
 		if (op.isEmpty()) {
-			//throw new BusinessException("Professional Group thoes not exist");
-			//Just return null
-			return null;
+			return Optional.empty();
 		}
-		return ProfessionalGroupAssembler.toDto(op.get());
+		return Optional.of(ProfessionalGroupAssembler.toDto(op.get()));
 	}
 
 }

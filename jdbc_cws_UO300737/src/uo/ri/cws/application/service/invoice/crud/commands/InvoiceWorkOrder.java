@@ -1,4 +1,4 @@
-package uo.ri.cws.application.service.invoice.create.commands;
+package uo.ri.cws.application.service.invoice.crud.commands;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

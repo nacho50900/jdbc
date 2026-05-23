@@ -1,22 +1,25 @@
-package uo.ri.cws.application.service.invoice.create;
+package uo.ri.cws.application.service.invoice.crud;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.invoice.InvoicingService;
-import uo.ri.cws.application.service.invoice.create.commands.FindNotInvoiceWorkOrdersByClientNif;
-import uo.ri.cws.application.service.invoice.create.commands.InvoiceWorkOrder;
+import uo.ri.cws.application.service.invoice.crud.commands.FindNotInvoicedWorkOrdersByClientNif;
+import uo.ri.cws.application.service.invoice.crud.commands.InvoiceWorkOrder;
 import uo.ri.util.exception.BusinessException;
 
 public class InvoicingServiceImpl implements InvoicingService {
 
+
+    private CommandExecutor executor = new CommandExecutor();
+    
 	@Override
 	public InvoiceDto create(List<String> workOrderIds)
 			throws BusinessException {
 		
-		InvoiceWorkOrder ci = new InvoiceWorkOrder(workOrderIds);
-		return ci.execute();
+		return executor.execute(new InvoiceWorkOrder(workOrderIds));
 	}
 
 	@Override
@@ -30,10 +33,7 @@ public class InvoicingServiceImpl implements InvoicingService {
 	@Override
 	public List<InvoicingWorkOrderDto> findNotInvoicedWorkOrdersByClientNif(
 			String nif) throws BusinessException {
-		
-		FindNotInvoiceWorkOrdersByClientNif find = 
-				new FindNotInvoiceWorkOrdersByClientNif(nif);
-		return find.execute();
+		return executor.execute(new FindNotInvoicedWorkOrdersByClientNif(nif));
 	}
 
 	@Override

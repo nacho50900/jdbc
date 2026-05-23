@@ -7,10 +7,9 @@ import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService;
 import uo.ri.cws.application.service.mechanic.crud.commands.AddMechanic;
 import uo.ri.cws.application.service.mechanic.crud.commands.DeleteMechanic;
+import uo.ri.cws.application.service.mechanic.crud.commands.FindMechanicById;
+import uo.ri.cws.application.service.mechanic.crud.commands.FindMechanicByNif;
 import uo.ri.cws.application.service.mechanic.crud.commands.ListAllMechanics;
-import uo.ri.cws.application.service.mechanic.crud.commands.ListMechanic;
-import uo.ri.cws.application.service.mechanic.crud.commands.ListMechanicById;
-import uo.ri.cws.application.service.mechanic.crud.commands.ListMechanicByNif;
 import uo.ri.cws.application.service.mechanic.crud.commands.ListMechanicsWithValidContracts;
 import uo.ri.cws.application.service.mechanic.crud.commands.UpdateMechanic;
 import uo.ri.util.exception.BusinessException;
@@ -21,58 +20,40 @@ public class MechanicCrudServiceImpl implements MechanicCrudService {
 
     @Override
     public MechanicDto create(MechanicDto dto) throws BusinessException {
-	//AddMechanic am = new AddMechanic(dto);
-	//return am.execute();
 	return executor.execute(new AddMechanic(dto));
 
     }
 
     @Override
     public void delete(String mechanicId) throws BusinessException {
-	DeleteMechanic dm = new DeleteMechanic(mechanicId);
-	dm.execute();
-
+    	executor.execute(new DeleteMechanic(mechanicId));
     }
 
     @Override
     public void update(MechanicDto dto) throws BusinessException {
-	// new UpdateMechanic(dto).execute();
-	executor.execute(new UpdateMechanic(dto));
+    	executor.execute(new UpdateMechanic(dto));
     }
 
     @Override
     public Optional<MechanicDto> findById(String id) throws BusinessException {
-		ListMechanic lm = new ListMechanicById(id);
-		MechanicDto dto = lm.execute();
-		if(dto == null) {
-			return Optional.empty();
-		}
-		return Optional.of(lm.execute());
+    	return executor.execute(new FindMechanicById(id));
     }
 
     @Override
     public Optional<MechanicDto> findByNif(String nif)
 	throws BusinessException {
-	ListMechanic lm = new ListMechanicByNif(nif);
-	MechanicDto dto = lm.execute();
-	if(dto == null) {
-		return Optional.empty();
-	}
-	return Optional.of(lm.execute());
+    	return executor.execute(new FindMechanicByNif(nif));
     }
 
     @Override
     public List<MechanicDto> findAll() throws BusinessException {
-	ListAllMechanics lms = new ListAllMechanics();
-	return lms.execute();
+    	return executor.execute(new ListAllMechanics());
     }
 
 	@Override //NOT USED -> DONE THROUGH CONTRACT
 	public List<MechanicDto> findMechanicsWithValidContract() 
 			throws BusinessException {
-		ListMechanicsWithValidContracts lms = 
-				new ListMechanicsWithValidContracts();
-		return lms.execute();
+		 return executor.execute(new ListMechanicsWithValidContracts());
 	}
 
 }
