@@ -1,5 +1,13 @@
 package uo.ri.cws.application.ui.manager.contracts.contract.action;
 
+import java.util.List;
+import java.util.Optional;
+
+import uo.ri.conf.Factories;
+import uo.ri.cws.application.service.contract.ContractCrudService;
+import uo.ri.cws.application.service.contract.ContractCrudService.ContractDto;
+import uo.ri.cws.application.service.contract.ContractCrudService.ContractSummaryDto;
+import uo.ri.cws.application.ui.util.Printer;
 import uo.ri.util.console.Console;
 import uo.ri.util.exception.BusinessException;
 import uo.ri.util.menu.Action;
@@ -8,10 +16,25 @@ public class ShowContractDetailsAction implements Action {
 
     @Override
     public void execute() throws BusinessException {
-        String id = Console.readString("Contract id");
+        ContractCrudService service =
+                Factories.service.forContractCrudService();
 
-        throw new UnsupportedOperationException("Not yet implemented");
+        List<ContractSummaryDto> all = service.findAll();
+        if (all.isEmpty()) {
+            Console.println("No contracts found");
+            return;
+        }
+        for (ContractSummaryDto c : all) {
+            Printer.printContractSummary(c);
+        }
 
-//		Printer.printContractDetails(c);
+        String id = Console.readString("Contract id to show");
+        Optional<ContractDto> result = service.findById(id);
+        if (result.isEmpty()) {
+            Console.println("Contract not found");
+            return;
+        }
+        Printer.printContractDetails(result.get());
     }
+
 }

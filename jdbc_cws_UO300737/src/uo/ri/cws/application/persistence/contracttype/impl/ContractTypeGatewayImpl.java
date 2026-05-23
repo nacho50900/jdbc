@@ -156,7 +156,7 @@ public class ContractTypeGatewayImpl implements ContractTypeGateway {
         r.id = rs.getString("ID");
         r.version = rs.getLong("VERSION");
         r.name = rs.getString("NAME");
-        r.compensationDays = rs.getDouble("COMPENSATIONDAYS");
+        r.compensationDays = rs.getDouble("COMPENSATIONDAYSPERYEAR");
         return r;
     }
 

@@ -6,9 +6,13 @@ import java.util.Optional;
 import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.contract.ContractCrudService;
 import uo.ri.cws.application.service.contract.crud.commands.AddContract;
+import uo.ri.cws.application.service.contract.crud.commands.DeleteContract;
 import uo.ri.cws.application.service.contract.crud.commands.FindAllContracts;
+import uo.ri.cws.application.service.contract.crud.commands.FindContractById;
 import uo.ri.cws.application.service.contract.crud.commands.ListInForceContracts;
 import uo.ri.cws.application.service.contract.crud.commands.ListMechanicContractsByNif;
+import uo.ri.cws.application.service.contract.crud.commands.TerminateContract;
+import uo.ri.cws.application.service.contract.crud.commands.UpdateContract;
 import uo.ri.util.exception.BusinessException;
 
 public class ContractCrudServiceImpl implements ContractCrudService {
@@ -21,28 +25,25 @@ public class ContractCrudServiceImpl implements ContractCrudService {
 	}
 
 	@Override
-	public void update(ContractDto dto) throws BusinessException {
-		// TODO Auto-generated method stub
-		
-	}
+    public void update(ContractDto dto) throws BusinessException {
+        executor.execute(new UpdateContract(dto));
+    }
 
-	@Override
-	public void delete(String id) throws BusinessException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void delete(String id) throws BusinessException {
+        executor.execute(new DeleteContract(id));
+    }
 
-	@Override
-	public void terminate(String contractId) throws BusinessException {
-		// TODO Auto-generated method stub
-		
-	}
+    @Override
+    public void terminate(String contractId) throws BusinessException {
+        executor.execute(new TerminateContract(contractId));
+    }
 
-	@Override
-	public Optional<ContractDto> findById(String id) throws BusinessException {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
+    @Override
+    public Optional<ContractDto> findById(String id)
+            throws BusinessException {
+        return executor.execute(new FindContractById(id));
+    }
 
 	@Override
 	public List<ContractSummaryDto> findByMechanicNif(String nif)

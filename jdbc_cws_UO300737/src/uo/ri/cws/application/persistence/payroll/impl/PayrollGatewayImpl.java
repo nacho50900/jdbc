@@ -334,6 +334,47 @@ public class PayrollGatewayImpl implements PayrollGateway {
 	    return byMonth;
 	}
 	
+	public List<PayrollRecord> findByContractId(String contractId)
+	        throws PersistenceException {
+
+	    List<PayrollRecord> result = new ArrayList<>();
+	    Connection c = Jdbc.getCurrentConnection();
+
+	    try (PreparedStatement pst = c.prepareStatement(
+	            Queries.getSQLSentence("TPAYROLLS_FIND_BY_CONTRACT_ID"))) {
+
+	        pst.setString(1, contractId);
+
+	        try (ResultSet rs = pst.executeQuery()) {
+	            while (rs.next()) {
+	                PayrollRecord r = new PayrollRecord();
+	                r.id = rs.getString("ID");
+	                r.version = rs.getLong("VERSION");
+	                r.contractId = rs.getString("CONTRACT_ID");
+	                r.date = rs.getDate("DATE").toLocalDate();
+	                r.baseSalary = rs.getDouble("BASESALARY");
+	                r.extraSalary = rs.getDouble("EXTRASALARY");
+	                r.productivityEarning = rs.getDouble("PRODUCTIVITYEARNING");
+	                r.trienniumEarning = rs.getDouble("TRIENNIUMEARNING");
+	                r.taxDeduction = rs.getDouble("TAXDEDUCTION");
+	                r.nicDeduction = rs.getDouble("NICDEDUCTION");
+
+	                r.grossSalary = r.baseSalary + r.extraSalary
+	                        + r.productivityEarning + r.trienniumEarning;
+	                r.totalDeductions = r.taxDeduction + r.nicDeduction;
+	                r.netSalary = r.grossSalary - r.totalDeductions;
+
+	                result.add(r);
+	            }
+	        }
+
+	    } catch (SQLException e) {
+	        throw new PersistenceException(e);
+	    }
+
+	    return result;
+	}
+	
 	private PayrollRecord calculateAndInsertPayroll(
             ContractData contract, LocalDate payrollMonthStart) {
  
@@ -460,4 +501,5 @@ public class PayrollGatewayImpl implements PayrollGateway {
         r.netSalary = (base + extra + productivity + triennium) - (tax + nic);
         return r;
     }
+
 }

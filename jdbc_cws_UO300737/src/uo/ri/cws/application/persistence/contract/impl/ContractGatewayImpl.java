@@ -54,34 +54,89 @@ public class ContractGatewayImpl implements ContractGateway{
             pst.executeUpdate();
         
 	    } catch (SQLException e) {
-	        throw new RuntimeException("Error inserting contract: " + t.id, e);
+	        throw new PersistenceException("Error inserting contract: " + t.id, e);
 	    }
 	}
 
 	@Override
-	public void remove(String id) throws PersistenceException {
-		// TODO Auto-generated method stub
-		
-	}
+    public void remove(String id) throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TCONTRACTS_DELETE"))) {
 
-	@Override
-	public void update(ContractRecord t) throws PersistenceException {
-		// TODO Auto-generated method stub
-		
-	}
+            pst.setString(1, id);
+            pst.executeUpdate();
 
-	@Override
-	public Optional<ContractRecord> findById(String id) 
-			throws PersistenceException {
-		// TODO Auto-generated method stub
-		return Optional.empty();
-	}
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
 
-	@Override
-	public List<ContractRecord> findAll() throws PersistenceException {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void update(ContractRecord t) throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TCONTRACTS_UPDATE"))) {
+
+            pst.setDate(1,
+                    t.endDate != null
+                    ? java.sql.Date.valueOf(t.endDate) : null);
+            pst.setDouble(2, t.annualBaseSalary);
+            pst.setDouble(3, t.settlement);
+            pst.setString(4, t.state);
+            pst.setTimestamp(5, Timestamp.valueOf(LocalDateTime.now()));
+            pst.setString(6, t.id);
+            pst.setLong(7, t.version);
+
+            int updated = pst.executeUpdate();
+            if (updated == 0) {
+                throw new PersistenceException(
+                        "Optimistic lock failed for Contract id="
+                        + t.id + " version=" + t.version);
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
+
+    @Override
+    public Optional<ContractRecord> findById(String id)
+            throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TCONTRACTS_FIND_BY_ID"))) {
+
+            pst.setString(1, id);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (!rs.next()) {
+                    return Optional.empty();
+                }
+                return Optional.of(toRecord(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
+
+    @Override
+    public List<ContractRecord> findAll() throws PersistenceException {
+    	List<ContractRecord> result = new ArrayList<>();
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TCONTRACTS_FIND_ALL"));
+             ResultSet rs = pst.executeQuery()) {
+
+            while (rs.next()) {
+                result.add(toRecord(rs));
+            }
+            return result;
+
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
 
 	@Override
 	public Optional<List<ContractSummaryRecord>> findByMechanicNif(String nif) 
@@ -154,5 +209,79 @@ public class ContractGatewayImpl implements ContractGateway{
 	    }
 	    return Optional.of(contracts);
 	}
+
+    public boolean hasPayrolls(String contractId)
+            throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TCONTRACTS_COUNT_PAYROLLS"))) {
+
+            pst.setString(1, contractId);
+            try (ResultSet rs = pst.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
+
+    public boolean mechanicHasWorkOrders(String mechanicId)
+            throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TMECHANICS_HAS_WORKORDERS"))) {
+
+            pst.setString(1, mechanicId);
+            try (ResultSet rs = pst.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0;
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
+    
+    public Optional<ContractRecord> findInForceByMechanicId(
+            String mechanicId) throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence(
+                        "TCONTRACTS_FIND_INFORCE_BY_MECHANIC_ID"))) {
+
+            pst.setString(1, mechanicId);
+            try (ResultSet rs = pst.executeQuery()) {
+                if (!rs.next()) {
+                    return Optional.empty();
+                }
+                return Optional.of(toRecord(rs));
+            }
+
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+    }
+    
+    
+    // HELPER
+    private ContractRecord toRecord(ResultSet rs) throws SQLException {
+        ContractRecord r = new ContractRecord();
+        r.id = rs.getString("ID");
+        r.version = rs.getLong("VERSION");
+        r.mechanicId = rs.getString("MECHANIC_ID");
+        r.contractTypeId = rs.getString("CONTRACTTYPE_ID");
+        r.professionalGroupId = rs.getString("PROFESSIONALGROUP_ID");
+        r.startDate = rs.getDate("STARTDATE").toLocalDate();
+
+        java.sql.Date end = rs.getDate("ENDDATE");
+        r.endDate = end != null ? end.toLocalDate() : null;
+
+        r.annualBaseSalary = rs.getDouble("ANNUALBASESALARY");
+        r.taxRate = rs.getDouble("TAXRATE");
+        r.settlement = rs.getDouble("SETTLEMENT");
+        r.state = rs.getString("STATE");
+        return r;
+    }
+
 }
 
