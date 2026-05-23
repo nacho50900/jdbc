@@ -71,7 +71,7 @@ public class DeleteProfessionalGroup implements Command<ProfessionalGroupDto> {
 		    }
 	
 		} catch (SQLException e) {
-		    throw new RuntimeException(e); 
+		    //throw new RuntimeException(e); 
 		}
 	}
 

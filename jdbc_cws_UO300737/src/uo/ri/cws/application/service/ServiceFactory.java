@@ -5,6 +5,7 @@ import uo.ri.cws.application.service.client.ClientHistoryService;
 import uo.ri.cws.application.service.contract.ContractCrudService;
 import uo.ri.cws.application.service.contract.crud.ContractCrudServiceImpl;
 import uo.ri.cws.application.service.contracttype.ContractTypeCrudService;
+import uo.ri.cws.application.service.contracttype.crud.ContractTypeCrudServiceImpl;
 import uo.ri.cws.application.service.invoice.InvoicingService;
 import uo.ri.cws.application.service.invoice.create.InvoicingServiceImpl;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService;
@@ -46,7 +47,7 @@ public class ServiceFactory {
     }
 
     public ContractTypeCrudService forContractTypeCrudService() {
-	throw new NotYetImplementedException();
+    	return new ContractTypeCrudServiceImpl();
     }
 
     public PayrollService forPayrollService() {
