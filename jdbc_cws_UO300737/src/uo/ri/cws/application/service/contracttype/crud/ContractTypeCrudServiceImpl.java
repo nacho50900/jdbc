@@ -8,7 +8,7 @@ import uo.ri.cws.application.service.contracttype.ContractTypeCrudService;
 import uo.ri.cws.application.service.contracttype.crud.commands.AddContractType;
 import uo.ri.cws.application.service.contracttype.crud.commands.DeleteContractType;
 import uo.ri.cws.application.service.contracttype.crud.commands.FindContractTypeByName;
-import uo.ri.cws.application.service.contracttype.crud.commands.ListAllContractTypes;
+import uo.ri.cws.application.service.contracttype.crud.commands.FindAllContractTypes;
 import uo.ri.cws.application.service.contracttype.crud.commands.UpdateContractType;
 import uo.ri.util.exception.BusinessException;
 
@@ -40,7 +40,7 @@ public class ContractTypeCrudServiceImpl implements ContractTypeCrudService {
 
     @Override
     public List<ContractTypeDto> findAll() throws BusinessException {
-        return executor.execute(new ListAllContractTypes());
+        return executor.execute(new FindAllContractTypes());
     }
 
 }

@@ -9,8 +9,8 @@ import uo.ri.cws.application.service.contract.crud.commands.AddContract;
 import uo.ri.cws.application.service.contract.crud.commands.DeleteContract;
 import uo.ri.cws.application.service.contract.crud.commands.FindAllContracts;
 import uo.ri.cws.application.service.contract.crud.commands.FindContractById;
-import uo.ri.cws.application.service.contract.crud.commands.ListInForceContracts;
-import uo.ri.cws.application.service.contract.crud.commands.ListMechanicContractsByNif;
+import uo.ri.cws.application.service.contract.crud.commands.FindInForceContracts;
+import uo.ri.cws.application.service.contract.crud.commands.FindContractsByMechanicNif;
 import uo.ri.cws.application.service.contract.crud.commands.TerminateContract;
 import uo.ri.cws.application.service.contract.crud.commands.UpdateContract;
 import uo.ri.util.exception.BusinessException;
@@ -48,12 +48,12 @@ public class ContractCrudServiceImpl implements ContractCrudService {
 	@Override
 	public List<ContractSummaryDto> findByMechanicNif(String nif)
 			throws BusinessException {
-		return executor.execute(new ListMechanicContractsByNif(nif));
+		return executor.execute(new FindContractsByMechanicNif(nif));
 	}
 
 	@Override
 	public List<ContractDto> findInforceContracts() throws BusinessException {
-		return executor.execute(new ListInForceContracts());
+		return executor.execute(new FindInForceContracts());
 	}
 
 	@Override

@@ -2,10 +2,9 @@ package uo.ri.cws.application.persistence.contract;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
-import uo.ri.util.exception.BusinessException;
+import uo.ri.cws.application.persistence.PersistenceException;
 
 public interface ContractGateway extends 
 Gateway<uo.ri.cws.application.persistence.contract.ContractGateway.ContractRecord> {
@@ -39,10 +38,10 @@ Gateway<uo.ri.cws.application.persistence.contract.ContractGateway.ContractRecor
 
 	}
 
-	public Optional<List<ContractSummaryRecord>> findByMechanicNif(String nif) 
-			throws BusinessException;
+	public List<ContractSummaryRecord> findByMechanicNif(String nif) 
+			throws PersistenceException;
 	
-	public Optional<List<ContractRecord>> findInForceContracts() 
-			throws BusinessException;
+	public List<ContractRecord> findInForceContracts() 
+			throws PersistenceException;
 	
 }

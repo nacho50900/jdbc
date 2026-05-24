@@ -8,12 +8,15 @@ import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
 import uo.ri.cws.application.service.mechanic.crud.MechanicAssembler;
 
-public class ListAllMechanics implements Command<List<MechanicDto>> {
+public class FindMechanicsWithValidContracts
+	implements Command<List<MechanicDto>>{
 
     private MechanicGateway mg = Factories.persistence.forMechanic();
 
     @Override
     public List<MechanicDto> execute() {
-    	return MechanicAssembler.toDtoList(mg.findAll());
+    	return MechanicAssembler.toDtoList(
+    			mg.findMechanicsWithValidContract());
     }
+
 }

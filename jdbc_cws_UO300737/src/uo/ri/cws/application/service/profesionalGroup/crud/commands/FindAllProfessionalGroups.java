@@ -8,7 +8,7 @@ import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGate
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 
-public class ListAllProfessionalGroups 
+public class FindAllProfessionalGroups 
 	implements Command<List<ProfessionalGroupDto>> {
 
     private ProfessionalGroupGateway pg = 

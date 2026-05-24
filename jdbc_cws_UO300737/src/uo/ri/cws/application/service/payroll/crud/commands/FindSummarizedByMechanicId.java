@@ -16,14 +16,14 @@ import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
 import uo.ri.util.exception.BusinessException;
 
-public class ListSummarizedByMechanicId 
+public class FindSummarizedByMechanicId 
 	implements Command<List<PayrollSummaryDto>> {
 
 	private String mechanicId;
 	private PayrollGateway pg = Factories.persistence.forPayroll();
 	private MechanicGateway mg = Factories.persistence.forMechanic();
 	
-	public ListSummarizedByMechanicId(String mechanicId) {
+	public FindSummarizedByMechanicId(String mechanicId) {
 		ArgumentChecks.isNotNull(mechanicId, "mechanicId cannot be null");
 		ArgumentChecks.isNotBlank(mechanicId, "mechanicId cannot be blank");
 		this.mechanicId = mechanicId;

@@ -12,7 +12,7 @@ import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.cws.application.service.payroll.PayrollService.PayrollSummaryDto;
 import uo.ri.util.exception.BusinessException;
 
-public class ListAllSummarized implements Command<List<PayrollSummaryDto>> {
+public class FindAllSummarized implements Command<List<PayrollSummaryDto>> {
 
 	private PayrollGateway pg = Factories.persistence.forPayroll();
 	

@@ -9,7 +9,7 @@ import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.cws.application.service.contracttype.ContractTypeCrudService.ContractTypeDto;
 import uo.ri.util.exception.BusinessException;
 
-public class ListAllContractTypes implements Command<List<ContractTypeDto>> {
+public class FindAllContractTypes implements Command<List<ContractTypeDto>> {
 
     private final ContractTypeGateway ctg =
             Factories.persistence.forContractType();

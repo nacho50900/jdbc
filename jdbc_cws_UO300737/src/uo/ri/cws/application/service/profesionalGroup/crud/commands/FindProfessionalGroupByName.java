@@ -11,21 +11,20 @@ import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudServi
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessException;
 
-public class ListProfessionalGroupById implements Command<Optional<ProfessionalGroupDto>> {
+public class FindProfessionalGroupByName implements Command<Optional<ProfessionalGroupDto>> {
 
-	private String id;
-    private ProfessionalGroupGateway mp = 
-    		Factories.persistence.forProfessionalGroup();
+	private String name;
+    private ProfessionalGroupGateway mp = Factories.persistence.forProfessionalGroup();
     
-    public ListProfessionalGroupById(String id) {
-    	ArgumentChecks.isNotNull(id, "id cannot be null");
-    	ArgumentChecks.isNotBlank(id, "id cannot be blank");
-    	this.id = id;
+    public FindProfessionalGroupByName(String name) {
+    	ArgumentChecks.isNotNull(name, "name cannot be null");
+    	ArgumentChecks.isNotBlank(name, "name cannot be blank");
+    	this.name = name;
     }
 
 	@Override
 	public Optional<ProfessionalGroupDto> execute() throws BusinessException {
-		Optional<ProfessionalGroupRecord> op = mp.findById(id);
+		Optional<ProfessionalGroupRecord> op = mp.findByName(name);
 		if (op.isEmpty()) {
 			return Optional.empty();
 		}

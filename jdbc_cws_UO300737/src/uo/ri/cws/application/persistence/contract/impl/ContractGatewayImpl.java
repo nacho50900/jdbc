@@ -10,13 +10,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.ContractSummaryAssembler;
 import uo.ri.cws.application.service.contract.ContractCrudService.ContractSummaryDto;
-import uo.ri.util.exception.BusinessException;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -139,15 +137,15 @@ public class ContractGatewayImpl implements ContractGateway{
     }
 
 	@Override
-	public Optional<List<ContractSummaryRecord>> findByMechanicNif(String nif) 
-			throws BusinessException {
+	public List<ContractSummaryRecord> findByMechanicNif(String nif) 
+			throws PersistenceException {
 
 		List<ContractSummaryRecord> contracts = new ArrayList<>();
         Connection c = Jdbc.getCurrentConnection();
 
         try (PreparedStatement pst = c.prepareStatement(
                 Queries.getSQLSentence(
-                		"TCONTRACTS_FIND_INFORCE_BY_MECHANIC_NIF"))) {
+                		"TCONTRACTS_FIND_BY_MECHANIC_NIF"))) {
             pst.setString(1, nif);
 
             try (ResultSet rs = pst.executeQuery()) {
@@ -163,17 +161,14 @@ public class ContractGatewayImpl implements ContractGateway{
                 }
             }
 	    } catch(SQLException e) {
-	    	 throw new BusinessException(e.getMessage());
+	    	 throw new PersistenceException(e.getMessage());
 	    }
-	    if (contracts.isEmpty()) {
-	        return Optional.empty();
-	    }
-	    return Optional.of(contracts);
+	    return contracts;
     }
 
 	@Override
-	public Optional<List<ContractRecord>> findInForceContracts() 
-			throws BusinessException {
+	public List<ContractRecord> findInForceContracts() 
+			throws PersistenceException {
 		
 	    List<ContractRecord> contracts = new ArrayList<>();
 	    Connection c = Jdbc.getCurrentConnection();
@@ -183,31 +178,13 @@ public class ContractGatewayImpl implements ContractGateway{
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                	ContractRecord r = new ContractRecord();
-                    r.id = UUID.randomUUID().toString();
-                    r.version = 1L;
-                    
-                    r.mechanicId = rs.getString("mechanic_id");
-					r.contractTypeId = rs.getString("contracttype_id");
-					r.professionalGroupId = rs.getString(
-							"professionalgroup_id");
-
-                    r.startDate = rs.getDate("startdate").toLocalDate();
-                    r.endDate = rs.getDate("enddate") != null ? rs.getDate(
-                    		"enddate").toLocalDate() : null;
-                    r.annualBaseSalary = rs.getDouble("annualbasesalary");
-                    r.taxRate = rs.getDouble("taxrate");
-
-                    r.settlement = rs.getDouble("settlement");
-                    r.state = rs.getString("state");
-
-                    contracts.add(r);
+                    contracts.add(toRecord(rs));
                 }
 	        }
 	    } catch (SQLException e) {
 	        throw new PersistenceException(e.getMessage());
 	    }
-	    return Optional.of(contracts);
+	    return contracts;
 	}
 
     public boolean hasPayrolls(String contractId)

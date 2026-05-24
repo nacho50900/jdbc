@@ -11,12 +11,12 @@ import uo.ri.cws.application.service.payroll.PayrollService.PayrollDto;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessException;
 
-public class ListByPayrollId implements Command<Optional<PayrollDto>> {
+public class FindByPayrollId implements Command<Optional<PayrollDto>> {
 
     private String id;
     private PayrollGateway pg = Factories.persistence.forPayroll();
 
-    public ListByPayrollId(String id) {
+    public FindByPayrollId(String id) {
         ArgumentChecks.isNotNull(id, "id cannot be null");
         ArgumentChecks.isNotBlank(id, "id cannot be blank");
         this.id = id;

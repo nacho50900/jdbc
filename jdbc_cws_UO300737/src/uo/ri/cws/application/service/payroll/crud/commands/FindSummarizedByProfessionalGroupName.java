@@ -16,7 +16,7 @@ import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
 import uo.ri.util.exception.BusinessException;
 
-public class ListSummarizedByProfessionalGroupName 
+public class FindSummarizedByProfessionalGroupName 
 implements Command<List<PayrollSummaryDto>> {
 
 	private String groupName;
@@ -24,7 +24,7 @@ implements Command<List<PayrollSummaryDto>> {
 	private ProfessionalGroupGateway gg = 
 			Factories.persistence.forProfessionalGroup();
 	
-	public ListSummarizedByProfessionalGroupName(String groupName) {
+	public FindSummarizedByProfessionalGroupName(String groupName) {
 		ArgumentChecks.isNotNull(groupName, "groupName cannot be null");
 		ArgumentChecks.isNotBlank(groupName, "groupName cannot be blank");
 		this.groupName = groupName;

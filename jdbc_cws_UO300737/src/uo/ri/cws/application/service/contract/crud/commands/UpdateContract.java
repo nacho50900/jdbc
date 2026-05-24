@@ -24,8 +24,8 @@ public class UpdateContract implements Command<Void> {
     public UpdateContract(ContractDto dto) {
         ArgumentChecks.isNotNull(dto, "ContractDto cannot be null");
         ArgumentChecks.isNotBlank(dto.id, "Contract id cannot be blank");
-        ArgumentChecks.isTrue(dto.annualBaseSalary >= 0,
-                "Annual base salary must be >= 0");
+        ArgumentChecks.isTrue(dto.annualBaseSalary > 0,
+                "Annual base salary must be positive");
         this.dto = dto;
     }
 

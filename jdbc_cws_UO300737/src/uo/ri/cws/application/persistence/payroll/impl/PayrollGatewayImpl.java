@@ -32,7 +32,10 @@ public class PayrollGatewayImpl implements PayrollGateway {
         double annualBaseSalary;
         double taxRate;
         LocalDate startDate;
-        LocalDate endDate;
+        @SuppressWarnings("unused")
+		LocalDate endDate;
+        // I do not know why eclipse mark it as unsued it can be clearly see how
+        // it is used in lines 240 and 242
     }
     
 	@Override

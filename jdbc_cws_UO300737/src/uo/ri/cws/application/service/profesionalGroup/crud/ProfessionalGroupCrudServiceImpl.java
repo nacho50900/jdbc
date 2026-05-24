@@ -7,8 +7,8 @@ import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService;
 import uo.ri.cws.application.service.profesionalGroup.crud.commands.AddProfessionalGroup;
 import uo.ri.cws.application.service.profesionalGroup.crud.commands.DeleteProfessionalGroup;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.ListAllProfessionalGroups;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.ListProfessionalGroupByName;
+import uo.ri.cws.application.service.profesionalGroup.crud.commands.FindAllProfessionalGroups;
+import uo.ri.cws.application.service.profesionalGroup.crud.commands.FindProfessionalGroupByName;
 import uo.ri.cws.application.service.profesionalGroup.crud.commands.UpdateProfessionalGroup;
 import uo.ri.util.exception.BusinessException;
 
@@ -36,12 +36,12 @@ public class ProfessionalGroupCrudServiceImpl
     @Override
     public Optional<ProfessionalGroupDto> findByName(String name)
             throws BusinessException {
-        return executor.execute(new ListProfessionalGroupByName(name));
+        return executor.execute(new FindProfessionalGroupByName(name));
     }
 
     @Override
     public List<ProfessionalGroupDto> findAll() throws BusinessException {
-        return executor.execute(new ListAllProfessionalGroups());
+        return executor.execute(new FindAllProfessionalGroups());
     }
 
 }

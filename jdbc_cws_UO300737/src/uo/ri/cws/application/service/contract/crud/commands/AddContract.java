@@ -164,13 +164,13 @@ public class AddContract implements Command<ContractDto> {
     private double computeTaxRate(double annualSalary) {
         if (annualSalary <= 12_450) {
             return 0.19;
-        } else if (annualSalary <= 20_200) {
+        } else if (annualSalary < 20_200) {
             return 0.24;
-        } else if (annualSalary <= 35_200) {
+        } else if (annualSalary < 35_200) {
             return 0.30;
-        } else if (annualSalary <= 60_000) {
+        } else if (annualSalary < 60_000) {
             return 0.37;
-        } else if (annualSalary <= 300_000) {
+        } else if (annualSalary < 300_000) {
             return 0.45;
         } else {
             return 0.47;

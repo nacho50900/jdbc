@@ -10,10 +10,10 @@ import uo.ri.cws.application.service.payroll.crud.commands.DeleteLastGenerated;
 import uo.ri.cws.application.service.payroll.crud.commands.DeleteLastGeneratedOfMechanicId;
 import uo.ri.cws.application.service.payroll.crud.commands.GenerateForPreviousMonth;
 import uo.ri.cws.application.service.payroll.crud.commands.GenerateForPreviousMonthOf;
-import uo.ri.cws.application.service.payroll.crud.commands.ListAllSummarized;
-import uo.ri.cws.application.service.payroll.crud.commands.ListByPayrollId;
-import uo.ri.cws.application.service.payroll.crud.commands.ListSummarizedByMechanicId;
-import uo.ri.cws.application.service.payroll.crud.commands.ListSummarizedByProfessionalGroupName;
+import uo.ri.cws.application.service.payroll.crud.commands.FindAllSummarized;
+import uo.ri.cws.application.service.payroll.crud.commands.FindByPayrollId;
+import uo.ri.cws.application.service.payroll.crud.commands.FindSummarizedByMechanicId;
+import uo.ri.cws.application.service.payroll.crud.commands.FindSummarizedByProfessionalGroupName;
 import uo.ri.util.exception.BusinessException;
 
 public class PayrollServiceImpl implements PayrollService {
@@ -44,25 +44,25 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public Optional<PayrollDto> findById(String id) throws BusinessException {
-        return executor.execute(new ListByPayrollId(id));
+        return executor.execute(new FindByPayrollId(id));
     }
 
     @Override
     public List<PayrollSummaryDto> findAllSummarized() throws BusinessException {
-        return executor.execute(new ListAllSummarized());
+        return executor.execute(new FindAllSummarized());
     }
 
     @Override
     public List<PayrollSummaryDto> findSummarizedByMechanicId(String id)
             throws BusinessException {
-        return executor.execute(new ListSummarizedByMechanicId(id));
+        return executor.execute(new FindSummarizedByMechanicId(id));
     }
 
     @Override
     public List<PayrollSummaryDto> findSummarizedByProfessionalGroupName(
             String name) throws BusinessException {
         return executor.execute(
-                new ListSummarizedByProfessionalGroupName(name));
+                new FindSummarizedByProfessionalGroupName(name));
     }
 
 }
