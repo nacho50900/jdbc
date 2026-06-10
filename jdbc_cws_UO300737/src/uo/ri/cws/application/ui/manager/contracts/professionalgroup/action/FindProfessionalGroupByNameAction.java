@@ -3,8 +3,8 @@ package uo.ri.cws.application.ui.manager.contracts.professionalgroup.action;
 import java.util.Optional;
 
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 import uo.ri.cws.application.ui.util.Printer;
 import uo.ri.util.console.Console;
 import uo.ri.util.exception.BusinessException;

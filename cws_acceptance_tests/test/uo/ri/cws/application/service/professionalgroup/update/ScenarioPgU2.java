@@ -3,8 +3,8 @@ package uo.ri.cws.application.service.professionalgroup.update;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 import uo.ri.cws.application.service.util.ExceptionBox;
 import uo.ri.cws.application.service.util.dtobuilders.ProfessionalGroupDtoBuilder;
 

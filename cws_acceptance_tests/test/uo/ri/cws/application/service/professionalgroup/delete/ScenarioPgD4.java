@@ -4,7 +4,7 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService;
 import uo.ri.cws.application.service.util.ExceptionBox;
 import uo.ri.cws.application.service.util.dbfixture.DbFixtures;
 import uo.ri.cws.application.service.util.dbfixture.records.TProfessionalGroupsRecord;

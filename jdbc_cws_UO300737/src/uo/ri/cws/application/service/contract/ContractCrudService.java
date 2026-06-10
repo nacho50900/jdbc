@@ -118,10 +118,8 @@ public interface ContractCrudService {
 		public long version;
 		
 		public MechanicOfContractDto mechanic = new MechanicOfContractDto();
-		public ContractTypeOfContractDto contractType = 
-				new ContractTypeOfContractDto();
-		public ProfessionalGroupOfContractDto professionalGroup = 
-				new ProfessionalGroupOfContractDto();
+		public ContractTypeOfContractDto contractType = new ContractTypeOfContractDto();
+		public ProfessionalGroupOfContractDto professionalGroup = new ProfessionalGroupOfContractDto();
 		
 		public LocalDate startDate;
 		public LocalDate endDate;

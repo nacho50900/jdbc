@@ -1,4 +1,4 @@
-package uo.ri.cws.application.service.profesionalGroup.crud.commands;
+package uo.ri.cws.application.service.profesionalgroup.crud.commands;
 
 import java.util.Optional;
 

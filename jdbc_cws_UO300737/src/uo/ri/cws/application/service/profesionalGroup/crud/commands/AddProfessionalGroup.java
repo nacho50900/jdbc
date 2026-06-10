@@ -1,4 +1,4 @@
-package uo.ri.cws.application.service.profesionalGroup.crud.commands;
+package uo.ri.cws.application.service.profesionalgroup.crud.commands;
 
 import java.util.Optional;
 
@@ -7,7 +7,7 @@ import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupAsse
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
 import uo.ri.util.exception.BusinessException;

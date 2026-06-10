@@ -9,7 +9,7 @@ import uo.ri.cws.application.service.contract.ContractCrudService.MechanicOfCont
 import uo.ri.cws.application.service.contract.ContractCrudService.ProfessionalGroupOfContractDto;
 import uo.ri.cws.application.service.contracttype.ContractTypeCrudService.ContractTypeDto;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 
 public class ContractDtoBuilder {
 

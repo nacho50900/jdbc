@@ -12,8 +12,8 @@ import uo.ri.cws.application.service.mechanic.MechanicCrudService;
 import uo.ri.cws.application.service.mechanic.crud.MechanicCrudServiceImpl;
 import uo.ri.cws.application.service.payroll.PayrollService;
 import uo.ri.cws.application.service.payroll.crud.PayrollServiceImpl;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService;
-import uo.ri.cws.application.service.profesionalGroup.crud.ProfessionalGroupCrudServiceImpl;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService;
+import uo.ri.cws.application.service.profesionalgroup.crud.ProfessionalGroupCrudServiceImpl;
 import uo.ri.cws.application.service.spare.SparePartCrudService;
 import uo.ri.cws.application.service.vehicle.VehicleCrudService;
 import uo.ri.cws.application.service.vehicletype.VehicleTypeCrudService;
@@ -24,18 +24,12 @@ import uo.ri.util.exception.NotYetImplementedException;
 
 public class ServiceFactory {
 
-    // the not yet implemented section ------------------------------
-
     public MechanicCrudService forMechanicCrudService() {
     	return new MechanicCrudServiceImpl();
     }
 
     public InvoicingService forCreateInvoiceService() {
     	return new InvoicingServiceImpl();
-    }
-
-    public VehicleCrudService forVehicleCrudService() {
-	throw new NotYetImplementedException();
     }
 
     public SparePartCrudService forSparePartCrudService() {
@@ -58,6 +52,12 @@ public class ServiceFactory {
     	return new ProfessionalGroupCrudServiceImpl();
     }
 
+    // the not yet implemented section ------------------------------
+    
+    public VehicleCrudService forVehicleCrudService() {
+	throw new NotYetImplementedException();
+    }
+    
     public ClientCrudService forClientCrudService() {
 	throw new NotYetImplementedException();
     }

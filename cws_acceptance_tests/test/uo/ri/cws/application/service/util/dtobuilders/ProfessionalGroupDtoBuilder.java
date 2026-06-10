@@ -2,7 +2,7 @@ package uo.ri.cws.application.service.util.dtobuilders;
 
 import java.util.UUID;
 
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 import uo.ri.util.math.Rounds;
 import uo.ri.util.random.Random;
 

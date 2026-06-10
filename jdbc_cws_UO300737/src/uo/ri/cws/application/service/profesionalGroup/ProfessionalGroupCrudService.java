@@ -1,4 +1,4 @@
-package uo.ri.cws.application.service.profesionalGroup;
+package uo.ri.cws.application.service.profesionalgroup;
 
 import java.util.List;
 import java.util.Optional;

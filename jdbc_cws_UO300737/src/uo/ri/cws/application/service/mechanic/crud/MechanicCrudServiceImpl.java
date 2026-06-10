@@ -7,9 +7,9 @@ import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService;
 import uo.ri.cws.application.service.mechanic.crud.commands.AddMechanic;
 import uo.ri.cws.application.service.mechanic.crud.commands.DeleteMechanic;
+import uo.ri.cws.application.service.mechanic.crud.commands.FindAllMechanics;
 import uo.ri.cws.application.service.mechanic.crud.commands.FindMechanicById;
 import uo.ri.cws.application.service.mechanic.crud.commands.FindMechanicByNif;
-import uo.ri.cws.application.service.mechanic.crud.commands.FindAllMechanics;
 import uo.ri.cws.application.service.mechanic.crud.commands.FindMechanicsWithValidContracts;
 import uo.ri.cws.application.service.mechanic.crud.commands.UpdateMechanic;
 import uo.ri.util.exception.BusinessException;
@@ -50,7 +50,8 @@ public class MechanicCrudServiceImpl implements MechanicCrudService {
     	return executor.execute(new FindAllMechanics());
     }
 
-	@Override //NOT USED -> DONE THROUGH CONTRACT
+	// NOT USED -> DONE THROUGH CONTRACT 
+    // Keep just in case, it may be useful
 	public List<MechanicDto> findMechanicsWithValidContract() 
 			throws BusinessException {
 		 return executor.execute(new FindMechanicsWithValidContracts());

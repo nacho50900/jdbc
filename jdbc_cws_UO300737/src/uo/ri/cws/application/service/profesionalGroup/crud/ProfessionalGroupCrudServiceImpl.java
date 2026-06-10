@@ -1,15 +1,15 @@
-package uo.ri.cws.application.service.profesionalGroup.crud;
+package uo.ri.cws.application.service.profesionalgroup.crud;
 
 import java.util.List;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.util.command.CommandExecutor;
-import uo.ri.cws.application.service.profesionalGroup.ProfessionalGroupCrudService;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.AddProfessionalGroup;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.DeleteProfessionalGroup;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.FindAllProfessionalGroups;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.FindProfessionalGroupByName;
-import uo.ri.cws.application.service.profesionalGroup.crud.commands.UpdateProfessionalGroup;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService;
+import uo.ri.cws.application.service.profesionalgroup.crud.commands.AddProfessionalGroup;
+import uo.ri.cws.application.service.profesionalgroup.crud.commands.DeleteProfessionalGroup;
+import uo.ri.cws.application.service.profesionalgroup.crud.commands.FindAllProfessionalGroups;
+import uo.ri.cws.application.service.profesionalgroup.crud.commands.FindProfessionalGroupByName;
+import uo.ri.cws.application.service.profesionalgroup.crud.commands.UpdateProfessionalGroup;
 import uo.ri.util.exception.BusinessException;
 
 public class ProfessionalGroupCrudServiceImpl
