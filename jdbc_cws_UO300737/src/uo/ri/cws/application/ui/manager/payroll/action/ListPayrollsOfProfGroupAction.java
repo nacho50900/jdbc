@@ -22,7 +22,7 @@ public class ListPayrollsOfProfGroupAction implements Action {
     	List<PayrollSummaryDto> payrolls = new ArrayList<PayrollSummaryDto>();
     	
 		try {
-	    	payrolls = mcs.findSummarizedByMechanicId(groupName);
+	    	payrolls = mcs.findSummarizedByProfessionalGroupName(groupName);
 		} catch (BusinessException be) {
 		    Console.println(be.getMessage());
 		}

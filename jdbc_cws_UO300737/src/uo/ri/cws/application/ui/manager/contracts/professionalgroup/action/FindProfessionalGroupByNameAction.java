@@ -19,7 +19,7 @@ public class FindProfessionalGroupByNameAction implements Action {
 
         ProfessionalGroupCrudService mcs = 
         		Factories.service.forProfessionalGroupCrudService();
-        Optional<ProfessionalGroupDto> op = null;
+        Optional<ProfessionalGroupDto> op = Optional.empty();
         try {
         	op = mcs.findByName(name);
 		} catch (BusinessException be) {

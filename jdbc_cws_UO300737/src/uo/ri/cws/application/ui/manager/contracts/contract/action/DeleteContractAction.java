@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.contracts.contract.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -17,7 +18,13 @@ public class DeleteContractAction implements Action {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
 
-        List<ContractSummaryDto> all = service.findAll();
+        List<ContractSummaryDto> all = new ArrayList<ContractSummaryDto>();
+        try {
+        	all = service.findAll();
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+        
         if (all.isEmpty()) {
             Console.println("No contracts found");
             return;

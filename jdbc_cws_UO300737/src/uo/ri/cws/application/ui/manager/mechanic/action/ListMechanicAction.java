@@ -19,7 +19,7 @@ public class ListMechanicAction implements Action {
     	String selection = Console.readString("Want to search by Id or Nif");
 		MechanicCrudService mcs = Factories.service.
 				forMechanicCrudService();
-		Optional<MechanicDto> m = null;
+		Optional<MechanicDto> m = Optional.empty();
 		
 		try {
 	    	if (selection.toUpperCase().equals("ID")) {
@@ -39,7 +39,7 @@ public class ListMechanicAction implements Action {
     		Console.printf("\t%s %s %s %s %d\n", m.get().id, m.get().name, 
     				m.get().surname, m.get().nif, m.get().version);
     	} else {
-    		System.out.println("Mechanic not found");
+    		Console.println("Mechanic not found");
     	}
 
     }

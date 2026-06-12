@@ -13,7 +13,8 @@ public class DeleteProfessionalGroupAction implements Action {
     	
         String name = Console.readString("Professional group name");
 		
-        ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
+        ProfessionalGroupCrudService mcs = 
+        		Factories.service.forProfessionalGroupCrudService();
 		
 		try {
 			mcs.delete(name);

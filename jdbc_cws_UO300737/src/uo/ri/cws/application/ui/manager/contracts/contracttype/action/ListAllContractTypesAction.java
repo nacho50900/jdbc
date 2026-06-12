@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.contracts.contracttype.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -16,7 +17,7 @@ public class ListAllContractTypesAction implements Action {
     public void execute() throws BusinessException {
         ContractTypeCrudService service =
                 Factories.service.forContractTypeCrudService();
-        List<ContractTypeDto> types = null;
+        List<ContractTypeDto> types = new ArrayList<ContractTypeDto>();
         
         try {
         	types = service.findAll();

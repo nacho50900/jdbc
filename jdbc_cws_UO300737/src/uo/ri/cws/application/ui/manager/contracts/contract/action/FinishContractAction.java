@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.contracts.contract.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -17,7 +18,7 @@ public class FinishContractAction implements Action {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
 
-        List<ContractSummaryDto> all = null;
+        List<ContractSummaryDto> all = new ArrayList<ContractSummaryDto>();
         
 		try {
 			all = service.findAll();
@@ -34,8 +35,13 @@ public class FinishContractAction implements Action {
         }
 
         String id = Console.readString("Contract id to terminate");
-        service.terminate(id);
-        Console.println("Contract terminated");
+		try {
+	        service.terminate(id);
+	        Console.println("Contract terminated");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
     }
 
 }

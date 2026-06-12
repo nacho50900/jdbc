@@ -18,7 +18,8 @@ public class UpdateProfessionalGroupAction implements Action {
         dto.trienniumPayment = Console.readDouble("Triennium payment");
         dto.productivityRate = Console.readDouble("Productivity rate");
         
-        ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
+        ProfessionalGroupCrudService mcs = 
+        		Factories.service.forProfessionalGroupCrudService();
         
         
 		try {

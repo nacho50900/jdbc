@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.contracts.contract.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -17,7 +18,7 @@ public class ListAllContractsAction implements Action {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
         
-        List<ContractSummaryDto> contracts = null;
+        List<ContractSummaryDto> contracts = new ArrayList<ContractSummaryDto>();
 
 		try {
 			contracts = service.findAll();

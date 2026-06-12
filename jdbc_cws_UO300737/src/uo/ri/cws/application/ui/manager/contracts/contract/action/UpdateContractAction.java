@@ -1,6 +1,7 @@
 package uo.ri.cws.application.ui.manager.contracts.contract.action;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +21,7 @@ public class UpdateContractAction implements Action {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
 
-        List<ContractSummaryDto> all = null;
+        List<ContractSummaryDto> all = new ArrayList<ContractSummaryDto>();
         
 		try {
 			all = service.findAll();

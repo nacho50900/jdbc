@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.contracts.professionalgroup.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -13,19 +14,19 @@ import uo.ri.util.menu.Action;
 public class ListAllProfessionalGroupsAction implements Action {
 
     @Override
-    public void execute() throws Exception {
+    public void execute() throws BusinessException {
 
         ProfessionalGroupCrudService mcs = 
         		Factories.service.forProfessionalGroupCrudService();
         
-        List<ProfessionalGroupDto> groups = null;
+        List<ProfessionalGroupDto> groups = 
+        		new ArrayList<ProfessionalGroupDto>();;
         
         try {
         	groups = mcs.findAll();
 		} catch (BusinessException be) {
 		    Console.println(be.getMessage());
 		}
-
 
         if (groups.isEmpty()) {
             Console.println("No professional groups found");
