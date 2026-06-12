@@ -17,7 +17,13 @@ public class UpdateContractTypeAction implements Action {
 
         ContractTypeCrudService service =
                 Factories.service.forContractTypeCrudService();
-        Optional<ContractTypeDto> existing = service.findByName(name);
+        
+        Optional<ContractTypeDto> existing = null;
+        try {
+        	existing = service.findByName(name);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
 
         if (existing.isEmpty()) {
             Console.println("Contract type not found");

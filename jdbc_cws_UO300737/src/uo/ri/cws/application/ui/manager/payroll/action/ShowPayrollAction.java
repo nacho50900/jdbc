@@ -18,7 +18,13 @@ public class ShowPayrollAction implements Action {
         String payrollId = Console.readString("Payroll id");
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	Optional<PayrollDto> op = mcs.findById(payrollId);
+    	Optional<PayrollDto> op = Optional.empty();
+    	
+		try {
+			op = mcs.findById(payrollId);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     	
     	if (op.isEmpty()) {
     		 Console.println("No payrolls found for this professional group");

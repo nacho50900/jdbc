@@ -18,7 +18,13 @@ public class FindContractTypeByNameAction implements Action {
 
         ContractTypeCrudService service =
                 Factories.service.forContractTypeCrudService();
-        Optional<ContractTypeDto> result = service.findByName(name);
+        Optional<ContractTypeDto> result = Optional.empty();
+		
+        try {
+			result = service.findByName(name);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
 
         if (result.isEmpty()) {
             Console.println("Contract type not found");

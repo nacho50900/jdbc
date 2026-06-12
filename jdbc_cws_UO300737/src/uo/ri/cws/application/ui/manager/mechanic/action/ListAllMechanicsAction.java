@@ -14,8 +14,12 @@ public class ListAllMechanicsAction implements Action {
     	Console.println("\nList of mechanics \n");
     	
 		MechanicCrudService mcs = Factories.service.forMechanicCrudService();
-		
-		mcs.findAll().forEach(m -> Console.printf("\t%s %s %s %s %d\n", m.id,
-			    m.name, m.surname, m.nif, m.version));
+	
+		try {
+			mcs.findAll().forEach(m -> Console.printf("\t%s %s %s %s %d\n", m.id,
+				    m.name, m.surname, m.nif, m.version));
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 }

@@ -16,8 +16,15 @@ public class ListAllContractsAction implements Action {
     public void execute() throws BusinessException {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
-        List<ContractSummaryDto> contracts = service.findAll();
+        
+        List<ContractSummaryDto> contracts = null;
 
+		try {
+			contracts = service.findAll();
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
         if (contracts.isEmpty()) {
             Console.println("No contracts found");
             return;

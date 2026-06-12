@@ -16,7 +16,13 @@ public class ListAllContractTypesAction implements Action {
     public void execute() throws BusinessException {
         ContractTypeCrudService service =
                 Factories.service.forContractTypeCrudService();
-        List<ContractTypeDto> types = service.findAll();
+        List<ContractTypeDto> types = null;
+        
+        try {
+        	types = service.findAll();
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
 
         if (types.isEmpty()) {
             Console.println("No contract types found");

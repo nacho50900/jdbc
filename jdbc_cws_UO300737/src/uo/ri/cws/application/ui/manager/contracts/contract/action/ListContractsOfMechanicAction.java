@@ -18,9 +18,15 @@ public class ListContractsOfMechanicAction implements Action {
 
         ContractCrudService service =
                 Factories.service.forContractCrudService();
-        List<ContractSummaryDto> contracts =
-                service.findByMechanicNif(nif);
+        
+        List<ContractSummaryDto> contracts = null;
 
+		try {
+			contracts = service.findByMechanicNif(nif);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
         if (contracts.isEmpty()) {
             Console.println("No contracts found for this mechanic");
             return;

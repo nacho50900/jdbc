@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.payroll.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -18,8 +19,14 @@ public class ListPayrollsOfProfGroupAction implements Action {
         String groupName = Console.readString("Professional group name");
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	List<PayrollSummaryDto> payrolls = mcs.findSummarizedByProfessionalGroupName(groupName);
+    	List<PayrollSummaryDto> payrolls = new ArrayList<PayrollSummaryDto>();
     	
+		try {
+	    	payrolls = mcs.findSummarizedByMechanicId(groupName);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
         if (payrolls.isEmpty()) {
             Console.println("No payrolls found for this professional group");
             return;

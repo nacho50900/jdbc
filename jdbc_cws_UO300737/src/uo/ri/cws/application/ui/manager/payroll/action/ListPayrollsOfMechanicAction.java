@@ -1,5 +1,6 @@
 package uo.ri.cws.application.ui.manager.payroll.action;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import uo.ri.conf.Factories;
@@ -18,7 +19,13 @@ public class ListPayrollsOfMechanicAction implements Action {
         String mechanicId = Console.readString("Mechanic id");
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	List<PayrollSummaryDto> payrolls = mcs.findSummarizedByMechanicId(mechanicId);
+    	List<PayrollSummaryDto> payrolls = new ArrayList<PayrollSummaryDto>();
+    	
+		try {
+	    	payrolls = mcs.findSummarizedByMechanicId(mechanicId);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     	
         if (payrolls.isEmpty()) {
             Console.println("No payrolls found for this mechanic");

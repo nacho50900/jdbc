@@ -17,8 +17,15 @@ public class FindProfessionalGroupByNameAction implements Action {
     	
         String name = Console.readString("Professional group name");
 
-        ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
-        Optional<ProfessionalGroupDto> op = mcs.findByName(name);
+        ProfessionalGroupCrudService mcs = 
+        		Factories.service.forProfessionalGroupCrudService();
+        Optional<ProfessionalGroupDto> op = null;
+        try {
+        	op = mcs.findByName(name);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
         if (op.isEmpty()) {
             Console.println("The professional group not found");
             return;  

@@ -20,7 +20,14 @@ public class UpdateContractAction implements Action {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
 
-        List<ContractSummaryDto> all = service.findAll();
+        List<ContractSummaryDto> all = null;
+        
+		try {
+			all = service.findAll();
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
         if (all.isEmpty()) {
             Console.println("No contracts found");
             return;
@@ -30,7 +37,13 @@ public class UpdateContractAction implements Action {
         }
 
         String id = Console.readString("Contract id to update");
-        Optional<ContractDto> existing = service.findById(id);
+        Optional<ContractDto> existing = Optional.empty();
+		try {
+			existing = service.findById(id);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
         if (existing.isEmpty()) {
             Console.println("Contract not found");
             return;

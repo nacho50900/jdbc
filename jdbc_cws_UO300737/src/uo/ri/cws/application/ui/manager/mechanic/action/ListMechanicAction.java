@@ -21,16 +21,21 @@ public class ListMechanicAction implements Action {
 				forMechanicCrudService();
 		Optional<MechanicDto> m = null;
 		
-    	if (selection.toUpperCase().equals("ID")) {
-    		String idMechanic = Console.readString("Type mechanic id ");
-    		m = mcs.findById(idMechanic);
-    	} 
-    	if (selection.toUpperCase().equals("NIF")) {
-    		String nifMechanic = Console.readString("Type mechanic nif ");
-    		m = mcs.findByNif(nifMechanic);
-    	}
+		try {
+	    	if (selection.toUpperCase().equals("ID")) {
+	    		String idMechanic = Console.readString("Type mechanic id ");
+	    		m = mcs.findById(idMechanic);
+	    	} 
+	    	if (selection.toUpperCase().equals("NIF")) {
+	    		String nifMechanic = Console.readString("Type mechanic nif ");
+	    		m = mcs.findByNif(nifMechanic);
+	    	}
+	    	
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
 
-    	if (m.isPresent()) {
+		if (m.isPresent()) {
     		Console.printf("\t%s %s %s %s %d\n", m.get().id, m.get().name, 
     				m.get().surname, m.get().nif, m.get().version);
     	} else {

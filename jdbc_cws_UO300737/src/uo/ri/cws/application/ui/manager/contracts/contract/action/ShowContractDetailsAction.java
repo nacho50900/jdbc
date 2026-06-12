@@ -19,7 +19,13 @@ public class ShowContractDetailsAction implements Action {
         ContractCrudService service =
                 Factories.service.forContractCrudService();
 
-        List<ContractSummaryDto> all = service.findAll();
+        List<ContractSummaryDto> all = null;
+		try {
+			all = service.findAll();
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
         if (all.isEmpty()) {
             Console.println("No contracts found");
             return;
@@ -29,7 +35,15 @@ public class ShowContractDetailsAction implements Action {
         }
 
         String id = Console.readString("Contract id to show");
-        Optional<ContractDto> result = service.findById(id);
+        
+        Optional<ContractDto> result = Optional.empty();
+        		
+		try {
+			result = service.findById(id);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
         if (result.isEmpty()) {
             Console.println("Contract not found");
             return;
