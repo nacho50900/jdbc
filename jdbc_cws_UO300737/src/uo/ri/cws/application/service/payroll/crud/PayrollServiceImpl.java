@@ -8,12 +8,11 @@ import uo.ri.cws.application.persistence.util.command.CommandExecutor;
 import uo.ri.cws.application.service.payroll.PayrollService;
 import uo.ri.cws.application.service.payroll.crud.commands.DeleteLastGenerated;
 import uo.ri.cws.application.service.payroll.crud.commands.DeleteLastGeneratedOfMechanicId;
-import uo.ri.cws.application.service.payroll.crud.commands.GenerateForPreviousMonth;
-import uo.ri.cws.application.service.payroll.crud.commands.GenerateForPreviousMonthOf;
 import uo.ri.cws.application.service.payroll.crud.commands.FindAllSummarized;
 import uo.ri.cws.application.service.payroll.crud.commands.FindByPayrollId;
 import uo.ri.cws.application.service.payroll.crud.commands.FindSummarizedByMechanicId;
 import uo.ri.cws.application.service.payroll.crud.commands.FindSummarizedByProfessionalGroupName;
+import uo.ri.cws.application.service.payroll.crud.commands.GenerateForPreviousMonthOf;
 import uo.ri.util.exception.BusinessException;
 
 public class PayrollServiceImpl implements PayrollService {
@@ -22,7 +21,7 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public List<PayrollDto> generateForPreviousMonth() throws BusinessException {
-        return executor.execute(new GenerateForPreviousMonth());
+        return executor.execute(new GenerateForPreviousMonthOf(LocalDate.now()));
     }
 
     @Override

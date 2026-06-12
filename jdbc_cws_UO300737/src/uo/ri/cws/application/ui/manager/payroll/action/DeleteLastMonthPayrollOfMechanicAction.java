@@ -14,9 +14,12 @@ public class DeleteLastMonthPayrollOfMechanicAction implements Action {
         String mechanicId = Console.readString("Mechanic id");
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	mcs.deleteLastGeneratedOfMechanicId(mechanicId);
 
-    	// Print result
-        Console.println("Last month's payroll for the mechanic deleted");
+		try {
+	    	mcs.deleteLastGeneratedOfMechanicId(mechanicId);
+	        Console.println("Last month's payroll for the mechanic deleted");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 }

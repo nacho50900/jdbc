@@ -29,8 +29,12 @@ public class UpdateContractTypeAction implements Action {
         dto.compensationDays =
                 Console.readDouble("New compensation days");
 
-        service.update(dto);
-        Console.println("Contract type updated");
+		try {
+			service.update(dto);
+	        Console.println("Contract type updated");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 
 }

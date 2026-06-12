@@ -19,10 +19,15 @@ public class GeneratePayrollsAtDateAction implements Action {
         LocalDate date = Console.readDate("Date (yyyy-MM-dd)");
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	List<PayrollDto> payrolls = mcs.generateForPreviousMonthOf(date);
 
-    	// Print result
-        Console.println(payrolls.size() + " payrolls generated for the specified date");
-        Printer.printPayrolls( payrolls );
+		try {
+			List<PayrollDto> payrolls = mcs.generateForPreviousMonthOf(date);
+			
+	        Console.println(payrolls.size() + " "
+	        		+ "payrolls generated for the specified date");
+	        Printer.printPayrolls( payrolls );
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 }

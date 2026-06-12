@@ -27,8 +27,13 @@ public class AddMechanicAction implements Action {
 		MechanicCrudService mcs = Factories.service.forMechanicCrudService();
 		dto = mcs.create(dto);
 	
-		// Print result
-		Console.println("Mechanic added: " + dto.id);
+		try {
+		    mcs.create(dto);
+		    Console.println("Mechanic added" + dto.id);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
     }
 
 }

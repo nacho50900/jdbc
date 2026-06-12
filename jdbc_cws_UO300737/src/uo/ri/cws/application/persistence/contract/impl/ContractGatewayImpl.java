@@ -13,8 +13,6 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
-import uo.ri.cws.application.persistence.contract.ContractSummaryAssembler;
-import uo.ri.cws.application.service.contract.ContractCrudService.ContractSummaryDto;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -150,14 +148,15 @@ public class ContractGatewayImpl implements ContractGateway{
 
             try (ResultSet rs = pst.executeQuery()) {
                 while (rs.next()) {
-                    ContractSummaryDto dto = new ContractSummaryDto();
-                    dto.id = rs.getString("id");
-                    dto.nif = rs.getString("nif");
-                    dto.settlement = rs.getDouble("settlement");
-                    dto.state = rs.getString("state");
-                    dto.numPayrolls = rs.getInt("numPayrolls");
+                	
+                	ContractSummaryRecord rec = new ContractSummaryRecord();
+                	rec.id = rs.getString("id");
+                	rec.nif = rs.getString("nif");
+                	rec.settlement = rs.getDouble("settlement");
+                	rec.state = rs.getString("state");
+                	rec.numPayrolls = rs.getInt("numPayrolls");
 
-                    contracts.add(ContractSummaryAssembler.toRecord(dto));
+                    contracts.add(rec);
                 }
             }
 	    } catch(SQLException e) {
@@ -187,6 +186,7 @@ public class ContractGatewayImpl implements ContractGateway{
 	    return contracts;
 	}
 
+	@Override
     public boolean hasPayrolls(String contractId)
             throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
@@ -203,6 +203,7 @@ public class ContractGatewayImpl implements ContractGateway{
         }
     }
 
+    @Override
     public boolean mechanicHasWorkOrders(String mechanicId)
             throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
@@ -219,6 +220,7 @@ public class ContractGatewayImpl implements ContractGateway{
         }
     }
     
+    @Override
     public Optional<ContractRecord> findInForceByMechanicId(
             String mechanicId) throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();

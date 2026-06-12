@@ -17,9 +17,14 @@ public class AddProfessionalGroupAction implements Action {
         dto.trienniumPayment = Console.readDouble("Triennium payment");
         dto.productivityRate = Console.readDouble("Productivity rate");
 
-        ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
-    	dto = mcs.create(dto);
-
-        Console.println("Professional group "+ dto.name + " registered");
+        ProfessionalGroupCrudService mcs = 
+        		Factories.service.forProfessionalGroupCrudService();
+        
+		try {
+			dto = mcs.create(dto);
+	        Console.println("Professional group "+ dto.name + " registered");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 }

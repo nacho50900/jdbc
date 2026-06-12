@@ -4,8 +4,7 @@ import java.util.Optional;
 
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
-import uo.ri.cws.application.persistence.mechanic.MechanicRecord;
-import uo.ri.cws.application.persistence.mechanic.impl.MechanicGatewayImpl;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
@@ -36,27 +35,21 @@ public class DeleteMechanic implements Command<Void> {
     }
 
     private void checkNoWorkorders() throws BusinessException {
-        boolean has = ((MechanicGatewayImpl) Factories.persistence.forMechanic())
-                .hasWorkOrders(mechanicId);
-        if (has) {
+        if (mg.hasWorkOrders(mechanicId)) {
             throw new BusinessException(
                     "Cannot delete a mechanic with work orders assigned");
         }
     }
 
     private void checkNoInterventions() throws BusinessException {
-        boolean has = ((MechanicGatewayImpl) Factories.persistence.forMechanic())
-                .hasInterventions(mechanicId);
-        if (has) {
+        if (mg.hasInterventions(mechanicId)) {
             throw new BusinessException(
                     "Cannot delete a mechanic with interventions assigned");
         }
     }
 
     private void checkNoContract() throws BusinessException {
-        boolean has = ((MechanicGatewayImpl) Factories.persistence.forMechanic())
-                .hasContracts(mechanicId);
-        if (has) {
+        if (mg.hasContracts(mechanicId)) {
             throw new BusinessException(
                     "Cannot delete a mechanic with contracts assigned");
         }

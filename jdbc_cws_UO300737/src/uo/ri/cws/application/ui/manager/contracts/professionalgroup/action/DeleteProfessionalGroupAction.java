@@ -14,9 +14,12 @@ public class DeleteProfessionalGroupAction implements Action {
         String name = Console.readString("Professional group name");
 		
         ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
-		mcs.delete(name);
-	
-        Console.println("The professional group " + name + " has been deleted");
-
+		
+		try {
+			mcs.delete(name);
+	        Console.println("The professional group " + name + " has been deleted");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 }

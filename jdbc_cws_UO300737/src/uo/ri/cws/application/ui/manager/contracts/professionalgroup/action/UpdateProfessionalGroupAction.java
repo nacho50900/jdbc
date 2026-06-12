@@ -19,9 +19,14 @@ public class UpdateProfessionalGroupAction implements Action {
         dto.productivityRate = Console.readDouble("Productivity rate");
         
         ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
-        mcs.update(dto);
-         
-        Console.println("Professional group updated");
+        
+        
+		try {
+			mcs.update(dto);
+	        Console.println("Professional group updated");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
          
     }
 }

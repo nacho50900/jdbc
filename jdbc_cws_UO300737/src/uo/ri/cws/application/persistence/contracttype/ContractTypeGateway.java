@@ -1,25 +1,34 @@
 package uo.ri.cws.application.persistence.contracttype;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
 
-public interface ContractTypeGateway extends Gateway<ContractTypeRecord> {
+public interface ContractTypeGateway extends Gateway<uo.ri.cws.
+application.persistence.contracttype.ContractTypeGateway.ContractTypeRecord> {
 
-    /**
-     * Finds a contract type by its unique name.
-     *
-     * @param name the contract type name
-     * @return Optional with the record, or empty if not found
-     */
     Optional<ContractTypeRecord> findByName(String name);
 
-    /**
-     * Counts contracts (any state) linked to this contract type.
-     *
-     * @param contractTypeId surrogate id
-     * @return number of linked contracts
-     */
     int countContractsFor(String contractTypeId);
 
+    public class ContractTypeRecord {
+
+	public String id;
+	public long version;
+
+	public String name;
+	public double compensationDays;
+
+	public LocalDateTime createdAt;
+	public LocalDateTime updatedAt;
+	public String entityState;
+
+	public ContractTypeRecord() {
+	    this.createdAt = LocalDateTime.now();
+	    this.updatedAt = LocalDateTime.now();
+	    this.entityState = "";
+	}
+    }
+    	    
 }

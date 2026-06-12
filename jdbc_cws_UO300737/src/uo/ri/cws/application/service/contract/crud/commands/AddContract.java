@@ -9,16 +9,14 @@ import java.util.UUID;
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.ContractGateway.ContractRecord;
-import uo.ri.cws.application.persistence.contract.impl.ContractGatewayImpl;
 import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway;
-import uo.ri.cws.application.persistence.contracttype.ContractTypeRecord;
+import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway.ContractTypeRecord;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
-import uo.ri.cws.application.persistence.mechanic.MechanicRecord;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicRecord;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollRecord;
-import uo.ri.cws.application.persistence.payroll.impl.PayrollGatewayImpl;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupRecord;
+import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway.ProfessionalGroupRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.cws.application.service.contract.ContractCrudService.ContractDto;
 import uo.ri.util.assertion.ArgumentChecks;
@@ -83,8 +81,7 @@ public class AddContract implements Command<ContractDto> {
         }
 
         // 5. Terminate current active contract if any
-        Optional<ContractRecord> active =
-                ((ContractGatewayImpl) cg).findInForceByMechanicId(mechanic.get().id);
+        Optional<ContractRecord> active = cg.findInForceByMechanicId(mechanic.get().id);
         if (active.isPresent()) {
             terminatePrevious(active.get(), contractType.get());
         }
@@ -134,8 +131,7 @@ public class AddContract implements Command<ContractDto> {
             long fullYears = ChronoUnit.YEARS.between(
                     old.startDate, old.endDate);
 
-            List<PayrollRecord> payrolls =
-                    ((PayrollGatewayImpl) pg).findByContractId(old.id);
+            List<PayrollRecord> payrolls = pg.findByContractId(old.id);
             double sumGross = payrolls.stream()
                     .limit(12)
                     .mapToDouble(p -> p.baseSalary + p.extraSalary

@@ -5,9 +5,7 @@ import java.util.Optional;
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.ContractGateway.ContractRecord;
-import uo.ri.cws.application.persistence.contract.impl.ContractGatewayImpl;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
-import uo.ri.cws.application.persistence.mechanic.impl.MechanicGatewayImpl;
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
@@ -32,15 +30,15 @@ public class DeleteContract implements Command<Void> {
 
         ContractRecord contract = existing.get();
 
-        if (((ContractGatewayImpl) cg).mechanicHasWorkOrders(contract.mechanicId)) {
+        if (cg.mechanicHasWorkOrders(contract.mechanicId)) {
             throw new BusinessException(
                     "Cannot delete contract: mechanic has work orders");
         }
-        if (((MechanicGatewayImpl) mg).hasInterventions(contract.mechanicId)) {
+        if (mg.hasInterventions(contract.mechanicId)) {
             throw new BusinessException(
                     "Cannot delete contract: mechanic has interventions");
         }
-        if (((ContractGatewayImpl) cg).hasPayrolls(id)) {
+        if (cg.hasPayrolls(id)) {
             throw new BusinessException(
                     "Cannot delete contract: payrolls already generated");
         }

@@ -30,10 +30,15 @@ public class AddContractAction implements Action {
 
         ContractCrudService service =
                 Factories.service.forContractCrudService();
-        ContractDto created = service.create(dto);
+        
+		try {
+	        ContractDto created = service.create(dto);
+	        Console.println("Contract registered, id: " + created.id);
+	        Console.println("Start date: " + created.startDate);
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
 
-        Console.println("Contract registered, id: " + created.id);
-        Console.println("Start date: " + created.startDate);
     }
 
 }

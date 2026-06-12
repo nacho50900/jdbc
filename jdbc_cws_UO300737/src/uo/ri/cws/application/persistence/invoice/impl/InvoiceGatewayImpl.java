@@ -11,11 +11,9 @@ import java.util.List;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
-import uo.ri.cws.application.persistence.invoice.InvoiceAssembler;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
+import uo.ri.cws.application.service.invoice.InvoiceAssembler;
 import uo.ri.cws.application.service.invoice.InvoicingService.InvoiceDto;
-import uo.ri.cws.application.service.invoice.InvoicingService.InvoicingWorkOrderDto;
-import uo.ri.util.exception.BusinessException;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -100,7 +98,7 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 
 	
 	@Override
-	public Optional<InvoiceRecord> findByNif(String nif) {
+	public Optional<InvoiceRecord> findByNif(String nif) throws PersistenceException {
     	//Process
 		InvoiceDto dto = new InvoiceDto();
 		Connection c = Jdbc.getCurrentConnection();
@@ -122,16 +120,17 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 				}
 			}
 		} catch (SQLException e) {
-		    throw new RuntimeException(e);
+		    throw new PersistenceException(e);
 		}
 		return Optional.of(InvoiceAssembler.toRecord(dto));
 	}
 
+	/* Much better to be done via WorkOrder Gateway
 	@Override
-	public List<InvoicingWorkOrderDto> findNotInvoicedWorkOrdersByClientNif(
-			String nif) throws BusinessException {
+	public List<InvoicingWorkOrderRecord> findNotInvoicedWorkOrdersByClientNif(
+			String nif) throws PersistenceException {
 		
-	    List<InvoicingWorkOrderDto> invoicingWorkOrderDtos = new ArrayList<>();
+	    List<InvoicingWorkOrderRecord> invoicingWorkOrderDtos = new ArrayList<>();
 	    Connection c = Jdbc.getCurrentConnection();
 
         try (PreparedStatement pst = c
@@ -140,7 +139,7 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
             pst.setString(1, nif);
             try (ResultSet rs = pst.executeQuery();) {
                 while (rs.next()) {
-                	InvoicingWorkOrderDto dto = new InvoicingWorkOrderDto();
+                	InvoicingWorkOrderRecord dto = new InvoicingWorkOrderRecord();
                 	dto.id = rs.getString("ID");
                 	dto.state = rs.getString("STATE");
                 	//Converts date to LocalDateTime
@@ -151,10 +150,27 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
                 }
             } 
         } catch (SQLException e) {
-        	throw new RuntimeException(e);
+        	throw new PersistenceException(e);
         }
         return invoicingWorkOrderDtos;
+	} */
+
+    @Override
+    public long findNextNumber() throws PersistenceException {
+	Connection c = Jdbc.getCurrentConnection();
+	try (PreparedStatement pst = c
+	    .prepareStatement(Queries.getSQLSentence("TINVOICES_FIND_ALL"))) {
+	    try (ResultSet rs = pst.executeQuery()) {
+		if (rs.next()) {
+		    return rs.getLong(0) + 1;
+		}
+	    }
+
+	} catch (SQLException e) {
+	    throw new PersistenceException(e);
 	}
+	return 1;
+    }
 	
     public Optional<Long> findLastInvoiceNumber() throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
@@ -205,4 +221,5 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
         r.version = rs.getLong("VERSION");
         return r;
     }
+
 }

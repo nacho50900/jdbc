@@ -16,10 +16,15 @@ public class GeneratePayrollsTodayAction implements Action {
     public void execute() throws BusinessException {
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	List<PayrollDto> payrolls = mcs.generateForPreviousMonth();
 
-    	// Print result
-        Console.println( payrolls.size() + " payrolls generated");
-        Printer.printPayrolls( payrolls );
+		try {
+			List<PayrollDto> payrolls = mcs.generateForPreviousMonth();
+			
+	        Console.println( payrolls.size() + " payrolls generated");
+	        Printer.printPayrolls( payrolls );
+	        Printer.printPayrolls( payrolls );
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 }

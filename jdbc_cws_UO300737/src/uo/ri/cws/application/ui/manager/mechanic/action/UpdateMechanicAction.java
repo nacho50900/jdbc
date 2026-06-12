@@ -23,6 +23,7 @@ public class UpdateMechanicAction implements Action {
 	
 		// Ask for new data
 		// nif is the identity, cannot be changed
+		dto.id = Console.readString("Type mechahic id to update");
 		String name = Console.readString("Name");
 		String surname = Console.readString("Surname");
 		ArgumentChecks.isNotBlank(name);
@@ -31,10 +32,14 @@ public class UpdateMechanicAction implements Action {
 		dto.surname = surname;
 	
 		MechanicCrudService mcs = Factories.service.forMechanicCrudService();
-		mcs.update(dto);
-	
-		// Print result
-		Console.println("Mechanic updated");
+		
+		try {
+		    mcs.update(dto);
+		    Console.println("Mechanic updated");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
     }
 
 }

@@ -5,12 +5,12 @@ import java.util.List;
 import java.util.Optional;
 
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.persistence.payroll.PayrollAssembler;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollSummaryRecord;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupRecord;
+import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway.ProfessionalGroupRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
+import uo.ri.cws.application.service.payroll.PayrollAssembler;
 import uo.ri.cws.application.service.payroll.PayrollService.PayrollSummaryDto;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;

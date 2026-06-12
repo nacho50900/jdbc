@@ -1,30 +1,61 @@
 package uo.ri.cws.application.persistence.invoice;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
-import uo.ri.cws.application.service.invoice.InvoicingService.InvoicingWorkOrderDto;
-import uo.ri.util.exception.BusinessException;
+import uo.ri.cws.application.persistence.PersistenceException;
 
 public interface InvoiceGateway extends
     Gateway<uo.ri.cws.application.persistence.invoice.
     InvoiceGateway.InvoiceRecord> {
 
+
+	public Optional<InvoiceRecord> findByNif(String nif) throws PersistenceException;
+	
+    public long findNextNumber() throws PersistenceException;
+
+	//public List<InvoicingWorkOrderRecord> findNotInvoicedWorkOrdersByClientNif(
+	//		String nif) throws PersistenceException;  Better via WorkOrder
+    
     public static class InvoiceRecord {
-		public String id;		// the surrogate id (UUID)
+		public String id;
 		public long version;
 
-		public double amount;	// total amount (money) vat included
-		public double vat;		// amount of vat (money)
-		public long number;		// the invoice identity, a sequential number
-		public LocalDate date;	// of the invoice
-		public String state;	// the state as in InvoiceState
+		public double amount;
+		public double vat;	
+		public long number;	
+		public LocalDate date;
+		public String state;
+		
+		public LocalDateTime createdAt;
+		public LocalDateTime updatedAt;
+		public String entityState;
+		
+		public InvoiceRecord() {
+		    this.createdAt = LocalDateTime.now();
+		    this.updatedAt = LocalDateTime.now();
+		    this.entityState = "";
+	    }
     }
+    
+	public static class InvoicingWorkOrderRecord {
+		public String id;
+		public String description;
+		public LocalDateTime date;
+		public String state;
+		public double amount;
+		
+		public LocalDateTime createdAt;
+		public LocalDateTime updatedAt;
+		public String entityState;
+		
+		public InvoicingWorkOrderRecord() {
+		    this.createdAt = LocalDateTime.now();
+		    this.updatedAt = LocalDateTime.now();
+		    this.entityState = "";
+	    }
+	}
 
-	public Optional<InvoiceRecord> findByNif(String nif);
-
-	public List<InvoicingWorkOrderDto> findNotInvoicedWorkOrdersByClientNif(
-			String nif) throws BusinessException;
 }

@@ -11,7 +11,6 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupRecord;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -31,7 +30,7 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
             pst.setDouble(4, t.trienniumPayment);
             pst.setLong(5, t.version);
             pst.setTimestamp(6, java.sql.Timestamp.valueOf(t.createdAt));
-            pst.setTimestamp(7, java.sql.Timestamp.valueOf(t.updateAt));
+            pst.setTimestamp(7, java.sql.Timestamp.valueOf(t.updatedAt));
 
             pst.executeUpdate();
 	    } catch (SQLException e) {
@@ -139,6 +138,7 @@ public class ProfessionalGroupGatewayImpl implements ProfessionalGroupGateway {
         return result;
     }
     
+    @Override
     public boolean hasContracts(String groupId) throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
         try (PreparedStatement pst = c.prepareStatement(

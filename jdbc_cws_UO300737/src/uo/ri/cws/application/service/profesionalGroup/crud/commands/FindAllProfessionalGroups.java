@@ -3,9 +3,9 @@ package uo.ri.cws.application.service.profesionalgroup.crud.commands;
 import java.util.List;
 
 import uo.ri.conf.Factories;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupAssembler;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
 import uo.ri.cws.application.persistence.util.command.Command;
+import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupAssembler;
 import uo.ri.cws.application.service.profesionalgroup.ProfessionalGroupCrudService.ProfessionalGroupDto;
 
 public class FindAllProfessionalGroups 

@@ -27,8 +27,13 @@ public class DeleteContractAction implements Action {
         }
 
         String id = Console.readString("Contract id to delete");
-        service.delete(id);
-        Console.println("Contract deleted");
+        
+		try {
+	        service.delete(id);
+	        Console.println("Contract deleted");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 
 }

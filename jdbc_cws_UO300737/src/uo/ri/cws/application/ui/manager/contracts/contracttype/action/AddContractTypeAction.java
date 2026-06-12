@@ -18,9 +18,13 @@ public class AddContractTypeAction implements Action {
 
         ContractTypeCrudService service =
                 Factories.service.forContractTypeCrudService();
-        dto = service.create(dto);
-
-        Console.println("Contract type '" + dto.name + "' registered");
+        
+		try {
+	        dto = service.create(dto);
+	        Console.println("Contract type '" + dto.name + "' registered");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 
 }

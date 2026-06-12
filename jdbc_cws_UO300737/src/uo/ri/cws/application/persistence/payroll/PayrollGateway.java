@@ -9,15 +9,26 @@ import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollRecord;
 
 public interface PayrollGateway extends Gateway<PayrollRecord>{
+
+	boolean alreadyGeneratedForPrevMonthof(LocalDate present);
+
+	public List<PayrollSummaryRecord> findpayrollsByMechanicId(
+			String mechanicId) throws PersistenceException;
+
+	public List<PayrollSummaryRecord> findPayrollsByProfessionalGroupName(
+			String groupName) throws PersistenceException;
+
+	public int deleteLastGenerated() throws PersistenceException;
+
+	public int deleteLastGeneratedByMechanicId(String mechanicId)
+			throws PersistenceException;
+
+	public List<PayrollRecord> findByContractId(String id);
 	
     public class PayrollRecord {
 
     	public String id;
     	public long version;
-    	
-    	//Record atributes
-    	public LocalDateTime createdAt;
-    	public LocalDateTime updatedAt;
     	
     	public String contractId;
     	public LocalDate date;
@@ -36,36 +47,34 @@ public interface PayrollGateway extends Gateway<PayrollRecord>{
     	public double netSalary;
 		public double grossSalary;
 		public double totalDeductions;
+		
+		public LocalDateTime createdAt;
+		public LocalDateTime updatedAt;
+		public String entityState;
+		
+		public PayrollRecord() {
+		    this.createdAt = LocalDateTime.now();
+		    this.updatedAt = LocalDateTime.now();
+		    this.entityState = "";
+	    }
     }
     
     public class PayrollSummaryRecord {
 
     	public String id;
     	
-    	//Record atributes
-    	public LocalDateTime createdAt;
-    	public LocalDateTime updatedAt;
-    	
     	public LocalDate date;
     	public double netSalary;
+    	
+		public LocalDateTime createdAt;
+		public LocalDateTime updatedAt;
+		public String entityState;
+		
+		public PayrollSummaryRecord() {
+		    this.createdAt = LocalDateTime.now();
+		    this.updatedAt = LocalDateTime.now();
+		    this.entityState = "";
+	    }
     }
-
-	public List<PayrollRecord> generateForPrevMonth();
-
-	public List<PayrollRecord> generateForPrevMonthof(LocalDate present);
-
-	boolean alreadyGeneratedForPrevMonthof(LocalDate present);
-
-	public List<PayrollSummaryRecord> findpayrollsByMechanicId(
-			String mechanicId) throws PersistenceException;
-
-	public List<PayrollSummaryRecord> findPayrollsByProfessionalGroupName(
-			String groupName) throws PersistenceException;
-
-	public int deleteLastGenerated() throws PersistenceException;
-
-	public int deleteLastGeneratedByMechanicId(String mechanicId)
-			throws PersistenceException;
-
 
 }

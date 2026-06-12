@@ -45,8 +45,13 @@ public class UpdateContractAction implements Action {
                 Console.readDouble("New annual base salary");
         dto.endDate = readOptionalDate("New end date (leave blank to clear)");
 
-        service.update(dto);
-        Console.println("Contract updated");
+		try {
+	        service.update(dto);
+	        Console.println("Contract updated");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+		
     }
 
     private LocalDate readOptionalDate(String msg) {

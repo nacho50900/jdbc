@@ -13,9 +13,13 @@ public class DeleteLastMonthPayrollAction implements Action {
     public void execute() throws BusinessException {
 
     	PayrollService mcs = Factories.service.forPayrollService();
-    	mcs.deleteLastGenerated();
 
-    	// Print result
-        Console.println("Last month's payrolls deleted");
+		try {
+	    	mcs.deleteLastGenerated();
+	        Console.println("Last month's payrolls deleted");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
     }
 }

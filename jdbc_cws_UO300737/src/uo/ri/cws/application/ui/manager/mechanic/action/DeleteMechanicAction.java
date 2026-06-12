@@ -14,9 +14,14 @@ public class DeleteMechanicAction implements Action {
 		String idMechanic = Console.readString("Type mechanic id ");
 	
 		MechanicCrudService mcs = Factories.service.forMechanicCrudService();
-		mcs.delete(idMechanic);
-	
-		Console.println("Mechanic deleted");
+
+		try {
+		    mcs.delete(idMechanic);
+		    Console.println("Mechanic deleted");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
+
     }
 
 }

@@ -4,8 +4,7 @@ import java.util.Optional;
 
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway;
-import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupRecord;
-import uo.ri.cws.application.persistence.professionalgroup.impl.ProfessionalGroupGatewayImpl;
+import uo.ri.cws.application.persistence.professionalgroup.ProfessionalGroupGateway.ProfessionalGroupRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
@@ -36,8 +35,7 @@ public class DeleteProfessionalGroup implements Command<Void> {
     }
 
     private void checkNoContracts(String groupId) throws BusinessException {
-        boolean hasContracts = ((ProfessionalGroupGatewayImpl) pg).hasContracts(groupId);
-        if (hasContracts) {
+        if (pg.hasContracts(groupId)) {
             throw new BusinessException(
                     "Cannot delete a professional group with contracts assigned");
         }

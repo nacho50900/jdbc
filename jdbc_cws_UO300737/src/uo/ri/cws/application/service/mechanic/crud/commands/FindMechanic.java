@@ -4,10 +4,10 @@ import java.util.Optional;
 
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
-import uo.ri.cws.application.persistence.mechanic.MechanicRecord;
+import uo.ri.cws.application.persistence.mechanic.MechanicGateway.MechanicRecord;
 import uo.ri.cws.application.persistence.util.command.Command;
+import uo.ri.cws.application.service.mechanic.MechanicAssembler;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
-import uo.ri.cws.application.service.mechanic.crud.MechanicAssembler;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessException;
 
@@ -33,7 +33,6 @@ public abstract class FindMechanic implements Command<Optional<MechanicDto>> {//
 	public Optional<MechanicDto> execute() throws BusinessException {
 		Optional<MechanicRecord> om;
 		if (selectedSearch.equals("ID")) {
-			System.out.println("HERE: " + IdOrNif);
 		    om = mg.findById(IdOrNif);
 		} else {
 		    om = mg.findByNif(IdOrNif);

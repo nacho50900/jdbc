@@ -5,8 +5,8 @@ import java.util.List;
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
 import uo.ri.cws.application.persistence.util.command.Command;
+import uo.ri.cws.application.service.mechanic.MechanicAssembler;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
-import uo.ri.cws.application.service.mechanic.crud.MechanicAssembler;
 
 public class FindAllMechanics implements Command<List<MechanicDto>> {
 

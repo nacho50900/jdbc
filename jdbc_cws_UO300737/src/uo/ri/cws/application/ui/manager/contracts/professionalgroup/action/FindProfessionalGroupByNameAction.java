@@ -20,7 +20,8 @@ public class FindProfessionalGroupByNameAction implements Action {
         ProfessionalGroupCrudService mcs = Factories.service.forProfessionalGroupCrudService();
         Optional<ProfessionalGroupDto> op = mcs.findByName(name);
         if (op.isEmpty()) {
-        	Console.println("The professional group not found");
+            Console.println("The professional group not found");
+            return;  
         }
         ProfessionalGroupDto dto = op.get();
         Printer.printProfessionalGroup(dto);

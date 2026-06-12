@@ -9,10 +9,9 @@ import uo.ri.conf.Factories;
 import uo.ri.cws.application.persistence.contract.ContractGateway;
 import uo.ri.cws.application.persistence.contract.ContractGateway.ContractRecord;
 import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway;
-import uo.ri.cws.application.persistence.contracttype.ContractTypeRecord;
+import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway.ContractTypeRecord;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway;
 import uo.ri.cws.application.persistence.payroll.PayrollGateway.PayrollRecord;
-import uo.ri.cws.application.persistence.payroll.impl.PayrollGatewayImpl;
 import uo.ri.cws.application.persistence.util.command.Command;
 import uo.ri.util.assertion.ArgumentChecks;
 import uo.ri.util.exception.BusinessChecks;
@@ -60,8 +59,7 @@ public class TerminateContract implements Command<Void> {
             long fullYears = ChronoUnit.YEARS.between(
                     contract.startDate, contract.endDate);
 
-            List<PayrollRecord> payrolls =
-                    ((PayrollGatewayImpl) pg).findByContractId(contract.id);
+            List<PayrollRecord> payrolls = pg.findByContractId(contract.id);
             double sumGross = payrolls.stream()
                     .limit(12)
                     .mapToDouble(p -> p.baseSalary + p.extraSalary

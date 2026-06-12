@@ -14,9 +14,13 @@ public class DeleteContractTypeAction implements Action {
 
         ContractTypeCrudService service =
                 Factories.service.forContractTypeCrudService();
-        service.delete(name);
-
-        Console.println("Contract type '" + name + "' deleted");
+     
+		try {
+			service.delete(name);
+	        Console.println("Contract type '" + name + "' deleted");
+		} catch (BusinessException be) {
+		    Console.println(be.getMessage());
+		}
     }
 
 }

@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.contracttype.ContractTypeGateway;
-import uo.ri.cws.application.persistence.contracttype.ContractTypeRecord;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 

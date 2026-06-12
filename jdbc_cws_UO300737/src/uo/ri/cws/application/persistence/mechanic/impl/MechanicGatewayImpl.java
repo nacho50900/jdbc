@@ -11,21 +11,17 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.mechanic.MechanicGateway;
-import uo.ri.cws.application.persistence.mechanic.MechanicRecord;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
-public class MechanicGatewayImpl implements MechanicGateway {	
+public class MechanicGatewayImpl implements MechanicGateway {
 
-	@Override
-	public void add(MechanicRecord t) throws PersistenceException {
-		
-		//Process
+    @Override
+    public void add(MechanicRecord t) throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
-
         try (PreparedStatement pst = c.prepareStatement(
-                 Queries.getSQLSentence("TMECHANICS_ADD"))) {
-        	
+                Queries.getSQLSentence("TMECHANICS_ADD"))) {
+
             pst.setString(1, t.id);
             pst.setString(2, t.nif);
             pst.setString(3, t.name);
@@ -36,95 +32,123 @@ public class MechanicGatewayImpl implements MechanicGateway {
             pst.setString(8, "ACTIVE");
 
             pst.executeUpdate();
-        
-	    } catch (SQLException e) {
-	        throw new PersistenceException("Error inserting mechanic: " + t.nif, e);
-	    }
-	}
+        } catch (SQLException e) {
+            throw new PersistenceException(
+                    "Error inserting mechanic: " + t.nif, e);
+        }
+    }
 
     @Override
     public void remove(String id) throws PersistenceException {
-		
         Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TMECHANICS_DELETE"))) {
 
-	    try (PreparedStatement pst = c.prepareStatement(
-		Queries.getSQLSentence("TMECHANICS_DELETE"))) {
-			pst.setString(1, id);
-			pst.executeUpdate();
-	
-		} catch (SQLException e) {
-		    throw new PersistenceException(e);
-		}
+            pst.setString(1, id);
+            pst.executeUpdate();
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
     }
-    
+
     @Override
     public void update(MechanicRecord t) throws PersistenceException {
-    	
-	    // Try with resources eliminated because of avoid closing the current
-	    // conection, all the same conection in order top assure transaction
-    	
         Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TMECHANICS_UPDATE"))) {
 
-	    try (PreparedStatement pst = c.prepareStatement(
-		Queries.getSQLSentence("TMECHANICS_UPDATE"))) {
+            pst.setString(1, t.name);
+            pst.setString(2, t.surname);
+            pst.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
+            pst.setString(4, t.id);
+            pst.setLong(5, t.version);
 
-			pst.setString(1, t.name);
-			pst.setString(2, t.surname);
-			pst.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-			pst.setString(4, t.id);
-			pst.setLong(5, t.version);
-			
-			int updated = pst.executeUpdate();
-
-			if (updated == 0) {
-                // No coincide la versión o no existe el id
-                throw new PersistenceException("Optimistic lock failed (id=" + 
-                t.id + ", version=" + t.version + ")");
+            int updated = pst.executeUpdate();
+            if (updated == 0) {
+                throw new PersistenceException(
+                        "Optimistic lock failed (id=" + t.id
+                        + ", version=" + t.version + ")");
             }
-				t.version = t.version + 1;
-		    
-		} catch (SQLException e) {
-		    throw new PersistenceException(e);
-		}
+            t.version = t.version + 1;
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
     }
 
     @Override
     public Optional<MechanicRecord> findById(String id)
-	throws PersistenceException {
-    	return findBy(id, Queries.getSQLSentence("TMECHANICS_FIND_BY_ID"));
+            throws PersistenceException {
+        return findBy(id, Queries.getSQLSentence("TMECHANICS_FIND_BY_ID"));
     }
-    
+
     @Override
-    public Optional<MechanicRecord> findByNif(String nif) {
-    	return findBy(nif, Queries.getSQLSentence("TMECHANICS_FIND_BY_NIF"));
+    public Optional<MechanicRecord> findByNif(String nif)
+            throws PersistenceException {
+        return findBy(nif, Queries.getSQLSentence("TMECHANICS_FIND_BY_NIF"));
     }
-    
+
     @Override
     public List<MechanicRecord> findAll() throws PersistenceException {
-    	
-		List<MechanicRecord> mechanicsList = new ArrayList<MechanicRecord>();
-	    Connection c = Jdbc.getCurrentConnection();
+        List<MechanicRecord> result = new ArrayList<>();
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence("TMECHANICS_FINDALL"))) {
 
-	    try (PreparedStatement pst = c.prepareStatement(
-		Queries.getSQLSentence("TMECHANICS_FINDALL"))) {
-			try (ResultSet rs = pst.executeQuery()) {
-				while (rs.next()) {
-				    mechanicsList.add(toRecord(rs));
-				}
-		    }
-		} catch (SQLException e) {
-		    throw new RuntimeException(e);
-		}
-		return mechanicsList;
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    result.add(toRecord(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+        return result;
     }
 
-    //GENERIC APPROCUH TO FIND BY ID OR NIF
-    public Optional<MechanicRecord> findBy(String IdOrNif,
-	String selectedAssignText) {
-    	
+    @Override
+    public List<MechanicRecord> findMechanicsWithValidContract()
+            throws PersistenceException {
+        List<MechanicRecord> result = new ArrayList<>();
         Connection c = Jdbc.getCurrentConnection();
-        try (PreparedStatement pst = c.prepareStatement(selectedAssignText)) {
-            pst.setString(1, IdOrNif);
+        try (PreparedStatement pst = c.prepareStatement(
+                Queries.getSQLSentence(
+                        "TMECHANICS_FINDMECHANICSWITHVALIDCONTRACT"))) {
+
+            try (ResultSet rs = pst.executeQuery()) {
+                while (rs.next()) {
+                    result.add(toRecord(rs));
+                }
+            }
+        } catch (SQLException e) {
+            throw new PersistenceException(e);
+        }
+        return result;
+    }
+
+    @Override
+    public boolean hasWorkOrders(String mechanicId)
+            throws PersistenceException {
+        return countBy("TMECHANICS_HAS_WORKORDERS", mechanicId) > 0;
+    }
+
+    @Override
+    public boolean hasInterventions(String mechanicId)
+            throws PersistenceException {
+        return countBy("TMECHANICS_HAS_INTERVENTIONS", mechanicId) > 0;
+    }
+
+    @Override
+    public boolean hasContracts(String mechanicId)
+            throws PersistenceException {
+        return countBy("TMECHANICS_HAS_CONTRACT", mechanicId) > 0;
+    }
+
+    // Helpers
+    private Optional<MechanicRecord> findBy(String value, String sql)
+            throws PersistenceException {
+        Connection c = Jdbc.getCurrentConnection();
+        try (PreparedStatement pst = c.prepareStatement(sql)) {
+            pst.setString(1, value);
             try (ResultSet rs = pst.executeQuery()) {
                 if (!rs.next()) {
                     return Optional.empty();
@@ -136,55 +160,21 @@ public class MechanicGatewayImpl implements MechanicGateway {
         }
     }
 
-	@Override
-	public List<MechanicRecord> findMechanicsWithValidContract() {
-
-		List<MechanicRecord> mechanicsList = new ArrayList<MechanicRecord>();
-        Connection c = Jdbc.getCurrentConnection();
-        
-	    try (PreparedStatement pst = c.prepareStatement(
-		Queries.getSQLSentence("TMECHANICS_FINDMECHANICSWITHVALIDCONTRACT"))) {
-			try (ResultSet rs = pst.executeQuery()) {
-				while (rs.next()) {
-				    mechanicsList.add(toRecord(rs));
-				}
-			}
-		} catch (SQLException e) {
-		    throw new RuntimeException(e);
-		}
-		return mechanicsList;
-	}
-	
-    public boolean hasWorkOrders(String mechanicId) throws PersistenceException {
-        return countBy("TMECHANICS_HAS_WORKORDERS", mechanicId) > 0;
-    }
- 
-    public boolean hasInterventions(String mechanicId) throws PersistenceException {
-        return countBy("TMECHANICS_HAS_INTERVENTIONS", mechanicId) > 0;
-    }
- 
-    public boolean hasContracts(String mechanicId) throws PersistenceException {
-        return countBy("TMECHANICS_HAS_CONTRACT", mechanicId) > 0;
-    }
- 
-    // Helpers
-    private long countBy(String queryKey, String id) throws PersistenceException {
+    private long countBy(String queryKey, String id)
+            throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
         try (PreparedStatement pst = c.prepareStatement(
                 Queries.getSQLSentence(queryKey))) {
- 
+
             pst.setString(1, id);
             try (ResultSet rs = pst.executeQuery()) {
-                if (rs.next()) {
-                    return rs.getLong(1);
-                }
+                return rs.next() ? rs.getLong(1) : 0L;
             }
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
-        return 0L;
     }
-    
+
     private MechanicRecord toRecord(ResultSet rs) throws SQLException {
         MechanicRecord r = new MechanicRecord();
         r.id      = rs.getString("ID");
