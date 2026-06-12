@@ -92,7 +92,7 @@ public class WorkOrderGatewayImpl implements WorkOrderGateway {
 	List<WorkorderRecord> list = new ArrayList<>();
 	Connection c = Jdbc.getCurrentConnection();
 	try (PreparedStatement pst = c
-	    .prepareStatement(Queries.getSQLSentence("TWORKORDERS_FINDALL"))) {
+	    .prepareStatement(Queries.getSQLSentence("TWORKORDERS_FIND_ALL"))) {
 	    try (ResultSet rs = pst.executeQuery()) {
 		while (rs.next()) {
 		    list.add(toRecord(rs));

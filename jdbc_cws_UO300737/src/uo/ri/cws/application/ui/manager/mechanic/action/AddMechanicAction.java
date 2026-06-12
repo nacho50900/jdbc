@@ -25,7 +25,6 @@ public class AddMechanicAction implements Action {
 		// By the way, the service interface should NOT be modified
 	
 		MechanicCrudService mcs = Factories.service.forMechanicCrudService();
-		dto = mcs.create(dto);
 	
 		try {
 		    mcs.create(dto);

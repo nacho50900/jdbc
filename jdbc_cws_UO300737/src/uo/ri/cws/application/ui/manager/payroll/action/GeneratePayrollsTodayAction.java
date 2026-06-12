@@ -22,7 +22,6 @@ public class GeneratePayrollsTodayAction implements Action {
 			
 	        Console.println( payrolls.size() + " payrolls generated");
 	        Printer.printPayrolls( payrolls );
-	        Printer.printPayrolls( payrolls );
 		} catch (BusinessException be) {
 		    Console.println(be.getMessage());
 		}

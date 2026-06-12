@@ -161,9 +161,9 @@ public class GenerateForPreviousMonthOf implements Command<List<PayrollDto>> {
         total += wo.amount;
     }
 
-    System.out.println("total before rate: " + total);
-    System.out.println("productivityRate: " + group.productivityRate);
-    System.out.println("result: " + total * (group.productivityRate / 100.0));
+    //System.out.println("total before rate: " + total);
+    //System.out.println("productivityRate: " + group.productivityRate);
+    //System.out.println("result: " + total * (group.productivityRate / 100.0));
 
     return total * group.productivityRate;
     }

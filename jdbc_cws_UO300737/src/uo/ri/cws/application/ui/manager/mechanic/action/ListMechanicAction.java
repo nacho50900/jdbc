@@ -1,5 +1,7 @@
 package uo.ri.cws.application.ui.manager.mechanic.action;
 
+import java.util.Optional;
+
 import uo.ri.conf.Factories;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService;
 import uo.ri.cws.application.service.mechanic.MechanicCrudService.MechanicDto;
@@ -17,18 +19,23 @@ public class ListMechanicAction implements Action {
     	String selection = Console.readString("Want to search by Id or Nif");
 		MechanicCrudService mcs = Factories.service.
 				forMechanicCrudService();
-		MechanicDto m = null;
+		Optional<MechanicDto> m = null;
 		
     	if (selection.toUpperCase().equals("ID")) {
     		String idMechanic = Console.readString("Type mechanic id ");
-    		m = mcs.findById(idMechanic).get();
+    		m = mcs.findById(idMechanic);
     	} 
     	if (selection.toUpperCase().equals("NIF")) {
     		String nifMechanic = Console.readString("Type mechanic nif ");
-    		m = mcs.findByNif(nifMechanic).get();
+    		m = mcs.findByNif(nifMechanic);
     	}
 
-		Console.printf("\t%s %s %s %s %d\n", m.id, m.name, m.surname, m.nif,
-			    m.version);
+    	if (m.isPresent()) {
+    		Console.printf("\t%s %s %s %s %d\n", m.get().id, m.get().name, 
+    				m.get().surname, m.get().nif, m.get().version);
+    	} else {
+    		System.out.println("Mechanic not found");
+    	}
+
     }
 }

@@ -43,8 +43,8 @@ public class InvoiceWorkOrder implements Command<InvoiceDto> {
 		List<WorkorderRecord> workorders = getWorkOrders();
 	
 		for (WorkorderRecord wo : workorders) {
-		    if (wo.state != "FINISHED") {
-			throw new BusinessException("WorkOrder isn't finished yet");
+			if (!"FINISHED".equals(wo.state)) {
+				throw new BusinessException("WorkOrder isn't finished yet");
 		    }
 		}
 	

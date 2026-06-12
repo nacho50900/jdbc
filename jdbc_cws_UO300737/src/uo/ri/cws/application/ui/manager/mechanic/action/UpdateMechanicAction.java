@@ -23,7 +23,7 @@ public class UpdateMechanicAction implements Action {
 	
 		// Ask for new data
 		// nif is the identity, cannot be changed
-		dto.id = Console.readString("Type mechahic id to update");
+		dto.id = id;
 		String name = Console.readString("Name");
 		String surname = Console.readString("Surname");
 		ArgumentChecks.isNotBlank(name);

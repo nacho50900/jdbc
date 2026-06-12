@@ -40,9 +40,8 @@ public class UpdateProfessionalGroup implements Command<ProfessionalGroupDto>{
 			pg.update(ProfessionalGroupAssembler.toRecord(dto));
 		} catch (PersistenceException pe) {
 			throw new BusinessException(pe.getMessage());
-		} //Should launch exception
-		BusinessChecks.hasVersion(dto.version, om.get().version);
+		}
 
-		return null;
+		return dto;
 	}
 }

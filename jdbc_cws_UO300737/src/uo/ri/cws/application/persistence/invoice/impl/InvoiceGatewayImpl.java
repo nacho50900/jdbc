@@ -12,8 +12,6 @@ import java.util.Optional;
 
 import uo.ri.cws.application.persistence.PersistenceException;
 import uo.ri.cws.application.persistence.invoice.InvoiceGateway;
-import uo.ri.cws.application.service.invoice.InvoiceAssembler;
-import uo.ri.cws.application.service.invoice.InvoicingService.InvoiceDto;
 import uo.ri.util.jdbc.Jdbc;
 import uo.ri.util.jdbc.Queries;
 
@@ -96,11 +94,13 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
         return out;
     }
 
-	
+	/* Much better do both things via WorkOrder Gateway
+	 * 
 	@Override
-	public Optional<InvoiceRecord> findByNif(String nif) throws PersistenceException {
-    	//Process
-		InvoiceDto dto = new InvoiceDto();
+	public Optional<InvoiceRecord> findByNif(String nif) 
+	throws PersistenceException {
+
+		InvoiceRecord rec = new InvoiceRecord();
 		Connection c = Jdbc.getCurrentConnection();
 
 		try (PreparedStatement pst = c.prepareStatement(
@@ -108,13 +108,13 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 	    	pst.setString(1, nif);
 			try(ResultSet rs = pst.executeQuery()) {
 				if (rs.next()) {
-					dto.id = rs.getString("ID");
-				    //dto.number = rs.getLong("number"); not yet
-				    //dto.vat = rs.getDouble("vat");
-				    dto.date = rs.getDate("date").toLocalDate();
-				    dto.amount = rs.getDouble("amount");
-				    dto.state = rs.getString("state"); 
-				    dto.version = rs.getLong("version");
+					rec.id = rs.getString("ID");
+				    //rec.number = rs.getLong("number"); not yet
+				    //rec.vat = rs.getDouble("vat");
+					rec.date = rs.getDate("date").toLocalDate();
+					rec.amount = rs.getDouble("amount");
+					rec.state = rs.getString("state"); 
+					rec.version = rs.getLong("version");
 				}else {
 					return Optional.empty();
 				}
@@ -122,10 +122,9 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 		} catch (SQLException e) {
 		    throw new PersistenceException(e);
 		}
-		return Optional.of(InvoiceAssembler.toRecord(dto));
+		return Optional.of(rec);
 	}
 
-	/* Much better to be done via WorkOrder Gateway
 	@Override
 	public List<InvoicingWorkOrderRecord> findNotInvoicedWorkOrdersByClientNif(
 			String nif) throws PersistenceException {
@@ -157,40 +156,21 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
 
     @Override
     public long findNextNumber() throws PersistenceException {
-	Connection c = Jdbc.getCurrentConnection();
-	try (PreparedStatement pst = c
-	    .prepareStatement(Queries.getSQLSentence("TINVOICES_FIND_ALL"))) {
-	    try (ResultSet rs = pst.executeQuery()) {
-		if (rs.next()) {
-		    return rs.getLong(0) + 1;
-		}
-	    }
-
-	} catch (SQLException e) {
-	    throw new PersistenceException(e);
-	}
-	return 1;
-    }
-	
-    public Optional<Long> findLastInvoiceNumber() throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
         try (PreparedStatement pst = c.prepareStatement(
                 Queries.getSQLSentence("TINVOICES_SELECT_LAST_NUMBER"));
              ResultSet rs = pst.executeQuery()) {
- 
             if (rs.next()) {
                 long val = rs.getLong(1);
-                if (rs.wasNull()) {
-                    return Optional.empty();
-                }
-                return Optional.of(val);
+                return rs.wasNull() ? 1L : val + 1L;
             }
-            return Optional.empty();
+            return 1L;
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
     }
 
+    /* No hace falta
     public Optional<InvoiceRecord> findByNumber(long number) throws PersistenceException {
         Connection c = Jdbc.getCurrentConnection();
         try (PreparedStatement pst = c.prepareStatement(
@@ -206,7 +186,7 @@ public class InvoiceGatewayImpl implements InvoiceGateway {
         } catch (SQLException e) {
             throw new PersistenceException(e);
         }
-    }
+    }*/
     
     
     //Helper

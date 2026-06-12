@@ -2,7 +2,6 @@ package uo.ri.cws.application.persistence.invoice;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import uo.ri.cws.application.persistence.Gateway;
 import uo.ri.cws.application.persistence.PersistenceException;
@@ -10,14 +9,13 @@ import uo.ri.cws.application.persistence.PersistenceException;
 public interface InvoiceGateway extends
     Gateway<uo.ri.cws.application.persistence.invoice.
     InvoiceGateway.InvoiceRecord> {
-
-
-	public Optional<InvoiceRecord> findByNif(String nif) throws PersistenceException;
 	
     public long findNextNumber() throws PersistenceException;
 
+    // Better via WorkOrder
 	//public List<InvoicingWorkOrderRecord> findNotInvoicedWorkOrdersByClientNif(
-	//		String nif) throws PersistenceException;  Better via WorkOrder
+	//		String nif) throws PersistenceException;
+    //public Optional<InvoiceRecord> findByNif(String nif) throws PersistenceException;
     
     public static class InvoiceRecord {
 		public String id;
